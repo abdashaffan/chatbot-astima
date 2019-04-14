@@ -27,7 +27,7 @@ $timestamp = date("YmdHis");
     <div id="chat-container">
             <div id="chat-container-navbar">
                 <img src="assets/header.png" alt="avatar" class="bot-picture">
-                <span id="profile-name">Asti</span>
+                <span id="profile-name">Asti </span>
             </div>  
             <form action="" id="chatbox">
                 <input type="text" name="text" id="text-msg" placeholder="Kirimi Astima pesan" autofocus autocomplete="off" >
@@ -39,6 +39,6 @@ $timestamp = date("YmdHis");
     </div>
     <!-- <img src="assets/avatar5.png" alt="chatbot-avatar-image" id="avatar"> -->
 
-    <script src="js/main.js"></script>
+    <script src="js/main.js?v=<?php echo $timestamp;?>"></script>
 </body>
 </html>

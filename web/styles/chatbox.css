@@ -5,24 +5,27 @@
     background: url(../assets/wallpaper.png) center no-repeat;
     background-size: cover;
     min-height: 80vh;
-    width: 40vw;
+    width: 50vw;
     margin: 1em auto;
     position: relative;
     margin: auto;
     border-radius: 5px;
-    /* background: #F0F0F0; */
     color: #333;
+    overflow-x: hidden;
 }
 
 #chat-container-navbar {
     border-radius: 6px 6px 0 0;
-    background: lavender;
+    background: #128c7e;
     display: flex;
     align-items: center;
 }
 
 #profile-name {
     background: none;
+    /* font-weight: bold; */
+    color: white;
+    letter-spacing: .1rem;
 }
 
 #chatbox {

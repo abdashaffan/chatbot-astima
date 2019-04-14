@@ -8,15 +8,13 @@ tombolKirim.addEventListener('click', function (e) {
     let message = kotakPesan.value;
     console.log(message);
     createMessage(message);
-    kotakPesan.reset();
+
 });
 
 function createMessage(message) {
     let chat = document.createElement("span");
-    let image = document.createElement('img');
     let br = document.createElement('br');
-    image.attr
-    chat.classList.add('my-message');
+    chat.classList.add('message', 'my-message');
     chat.innerText = message;
     console.log(chat);
     windowChat.appendChild(chat);
