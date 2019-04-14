@@ -56,7 +56,10 @@ def getKataDasar(str):
 	return stemmer.stem(str)
 
 def removeStopwords(str):
-	for stopword in arrStopword:
-		str = str.replace(stopword,"")
-	str = str.replace("  "," ")
-	return str
+	factory = StopWordRemoverFactory()
+	stopword = factory.create_stop_word_remover()
+	return stopword.remove(str)
+	# for stopword in arrStopword:
+	# 	str = str.replace(stopword,"")
+	# str = str.replace("  "," ")
+	# return str

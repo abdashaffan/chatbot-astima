@@ -1,32 +1,31 @@
-class last_occurrence(object):
-    """Last occurrence functor."""
-
+class lastOccurrence(object):
     def __init__(self, pattern, alphabet):
-        """Generate a dictionary with the last occurrence of each alphabet
-        letter inside the pattern.
-        
-        Note: This function uses str.rfind, which already is a pattern
-        matching algorithm. There are more 'basic' ways to generate this
-        dictionary."""
         self.occurrences = dict()
+        length = len(pattern)-1
         for letter in alphabet:
-            self.occurrences[letter] = pattern.rfind(letter)
+            i = length
+            while i>=0 and pattern[i]!=letter: # iterate from last element
+                i-=1
+            self.occurrences[letter] = i  # -1 if the letter isn't inside the pattern
+            # self.occurrences[letter] = pattern.rfind(letter)
 
     def __call__(self, letter):
-        """Return last position of the specified letter inside the pattern.
-        Return -1 if letter not found in pattern."""
         return self.occurrences[letter]
 
+    def print(self):
+        print("Here's the dict : ")
+        print(self.occurrences)
 
-def boyer_moore_match(text, pattern):
-    """Find occurrence of pattern in text."""
+def boyer_moore(text, pattern):
+    print("masuk",text,pattern)
     alphabet = set(text)
-    last = last_occurrence(pattern, alphabet)
+    last = lastOccurrence(pattern, alphabet)
+    # last.print()
     m = len(pattern)
     n = len(text)
     i = m - 1  # text index
     j = m - 1  # pattern index
-    print("Mat:   "+'.'*(i-m+1)+pattern)
+    # print("Mat:   "+'.'*(i-m+1)+pattern)
     while i < n:
         if text[i] == pattern[j]:
             if j == 0:
@@ -34,24 +33,24 @@ def boyer_moore_match(text, pattern):
             else:
                 i -= 1
                 j -= 1
+        # elif text[i] == '*':
+        #     j-=1
         else:
             l = last(text[i])
             i = i + m - min(j, 1+l)
             # print("i index = ",i)
-            print("Mat:   "+'.'*(i-m+1)+pattern)
+            # print("Mat:   "+'.'*(i-m+1)+pattern)
             j = m - 1 
     return -1
 
 
-
-### TEST FUNCTION ###
-
+'''
 if __name__ == '__main__':
         
     def show_match(text, pattern):
         # print 'Text:  %s' % text
         print("Text:  "+text)
-        p = boyer_moore_match(text, pattern)
+        p = boyer_moore(text, pattern)
         # print 'Match: %s%s' % ('.'*p, pattern)
         print("Match: "+'.'*p+pattern)
 
@@ -64,3 +63,4 @@ if __name__ == '__main__':
 #     pattern = 'dolor'
 #     show_match(text, pattern)
 # show_match(text, pattern + 'e')
+'''
