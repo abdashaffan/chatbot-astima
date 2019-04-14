@@ -1,11 +1,28 @@
 #chat-container {
+    /* buat sementara aja sampe jadi chatboxnya */
+    top: 50px;
+    /*  */
+    background: url(../assets/wallpaper.png) center no-repeat;
+    background-size: cover;
     min-height: 80vh;
     width: 40vw;
-    margin: auto;
+    margin: 1em auto;
     position: relative;
+    margin: auto;
     border-radius: 5px;
-    background: #F0F0F0;
+    /* background: #F0F0F0; */
     color: #333;
+}
+
+#chat-container-navbar {
+    border-radius: 6px 6px 0 0;
+    background: lavender;
+    display: flex;
+    align-items: center;
+}
+
+#profile-name {
+    background: none;
 }
 
 #chatbox {

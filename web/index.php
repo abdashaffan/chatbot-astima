@@ -15,27 +15,29 @@ $timestamp = date("YmdHis");
     <link rel="stylesheet" href="styles/avatar.css?v=<?php echo $timestamp;?>">
     <link rel="stylesheet" href="styles/chatbox.css?v=<?php echo $timestamp;?>">
     <link rel="stylesheet" href="styles/message.css?v=<?php echo $timestamp;?>">
+    <link rel="stylesheet" href="styles/bot.css?v=<?php echo $timestamp;?>">
     <title>Chatbot Stima</title>
 </head>
 <body>
-    <span id="title">
+    <!-- <span id="title">
         <span id="avatar-name">Astima</span><br>
         <span id="avatar-subtitle">Your daily assistant</span>
-    </span>
+    </span> -->
     
     <div id="chat-container">
-            <div id="chat-navbar">
-                <!-- Kosong dulu -->
+            <div id="chat-container-navbar">
+                <img src="assets/header.png" alt="avatar" class="bot-picture">
+                <span id="profile-name">Asti</span>
             </div>  
             <form action="" id="chatbox">
-                <input type="text" name="text" id="text-msg" placeholder="Kirimi astima pesan" autofocus autocomplete="off" >
+                <input type="text" name="text" id="text-msg" placeholder="Kirimi Astima pesan" autofocus autocomplete="off" >
         
                 <i class="material-icons md-dark" id="sticker">tag_faces</i>
                 <i class="material-icons md-dark" id="text-btn">send</i>
             </form>
             
     </div>
-    <img src="assets/avatar5.png" alt="chatbot-avatar-image" id="avatar">
+    <!-- <img src="assets/avatar5.png" alt="chatbot-avatar-image" id="avatar"> -->
 
     <script src="js/main.js"></script>
 </body>
