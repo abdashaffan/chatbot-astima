@@ -19,6 +19,7 @@ $timestamp = date("YmdHis");
     <title>Chatbot Stima</title>
 </head>
 <body>
+<!-- Di nerf dulu sampe chatboxnya kelar -->
     <!-- <span id="title">
         <span id="avatar-name">Astima</span><br>
         <span id="avatar-subtitle">Your daily assistant</span>
@@ -37,6 +38,7 @@ $timestamp = date("YmdHis");
             </form>
             
     </div>
+    <!-- Di nerf dulu avatarnya karena mengalihkan perhatian -->
     <!-- <img src="assets/avatar5.png" alt="chatbot-avatar-image" id="avatar"> -->
 
     <script src="js/main.js?v=<?php echo $timestamp;?>"></script>

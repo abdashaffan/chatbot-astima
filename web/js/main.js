@@ -10,36 +10,46 @@ tombolKirim.addEventListener('click', function (e) {
     e.preventDefault();
     let message = kotakPesan.value;
     processChat(message, ERROR_MSG); //sementara
+    kotakPesan.value = '';
 });
 
 function myMessage(message) {
     let chat = document.createElement("span");
-    chat.classList.add('message', 'my-message', 'chat', 'chat' + chatCounter.toString());
     chatCounter++;
+    chat.classList.add('message', 'my-message', 'chat', 'chat' + chatCounter.toString());
     chat.innerText = message;
     return chat;
 }
 
 function botMessage(message) {
     let chat = document.createElement("span");
-    chat.classList.add('message', 'bot-message', 'chat', 'chat' + chatCounter.toString());
     chatCounter++;
+    chat.classList.add('message', 'bot-message', 'chat', 'chat' + chatCounter.toString(), 'hidden');
     chat.innerHTML = `
         <p class="bot-blockchat-name">${BOT_NAME}</p><br>${message}
     `;
-    console.log(chat);
     return chat;
+}
+
+function raiseAllChatHistory(chatHistories, upscale) {
+    let allPastChats = [].slice.call(chatHistories); //mengubah nodeList ke array sudah pengolahan lebih mudah
+    let scale = upscale.height;
+    allPastChats.forEach(function () {
+        console.log(`bergerak ke atas sebesar ${scale}`); //harusnya pake fungsi transisi
+    });
 }
 
 function processChat(myChat, botChat) {
     myBlockChat = myMessage(myChat);
     windowChat.appendChild(myBlockChat);
-    windowChat.appendChild(newline);
-    setTimeout(function () {
-        console.log(document.querySelector('.chat').getBoundingClientRect());
-    }, 1000);
+    let chatHistories = document.querySelectorAll('.chat');
     botResponse = botMessage(botChat);
     windowChat.appendChild(botResponse);
-    windowChat.appendChild(newline);
+    let currentChatClass = `.chat${chatCounter}`;
+    setTimeout(function () {
+        let upInPixels = document.querySelector(currentChatClass).getBoundingClientRect();
+        raiseAllChatHistory(chatHistories, upInPixels);
+        botResponse.classList.remove('hidden');
+    }, 1000);
 
 }
