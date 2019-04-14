@@ -1,0 +1,11 @@
+.my-message {
+    bottom: 70px;
+    display: block;
+    border-radius: 10px 10px 0 10px;
+    font-size: .85rem;
+    background: lightblue;
+    position: absolute;
+    right: 0;
+    margin: 10px;
+    padding: .5rem;
+}
