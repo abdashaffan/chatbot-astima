@@ -20,7 +20,7 @@ def tambahKataTanya(str):
 	daftarKata = ["apa","dimana","kapan","bagimana","mengapa","siapa"]
 	for kata in daftarKata:
 		if (str.find(kata) != -1):
-			str.replace(kata+" ","")
+			str = str.replace(kata+" ","")
 			str = kata + " " + str
 	return str
 
@@ -40,16 +40,11 @@ def generateJawaban(str):
 	return jawaban
 
 if __name__ == '__main__':
+	faq = json.load(open("faq.json"))
 	while(1):
 		str = input("Ayo tanya apa : ")
+		str = tes.removeStopwords(str)
 		str = tambahKataTanya(str)
-		# pattern = input("Masukkan pattern : ")
-		# strBaku = ubahKataBaku(pattern,str)
-		# print(strBaku)
-		# if(kmp.kmp_ext(strBaku,pattern) == -1):
-		# 	print("Tidak terjadi kecocokan")
-		# else:
-		# 	print("Nice COCOK !")
-		faq = json.load(open("faq.json"))
+		print(str)
 		print(generateJawaban(str))
 		print()

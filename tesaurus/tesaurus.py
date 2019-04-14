@@ -4,6 +4,9 @@
 import json
 from kbbi import KBBI
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
+from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory
+
+arrStopword = ["itu","sih"]
 # ==================================================
 # Membaca dictionary dari json
 # ==================================================
@@ -52,17 +55,8 @@ def getKataDasar(str):
 	stemmer = factory.create_stemmer()
 	return stemmer.stem(str)
 
-# def dfs_all_sinonim(idx,panjang,lists):
-# 	global sinonims
-# 	if(idx == panjang):
-# 		for i in range(panjang):
-# 			print(sinonims[i][lists[i]],end=" ")
-# 		print()
-# 	else:
-# 		for i in range(len(sinonims[idx])):
-# 			lists.append(i)
-# 			dfs_all_sinonim(idx+1,panjang,lists)
-# 			lists.pop(idx-1)
-
-
-# dfs_all_sinonim(0,cnt_kalimat,[])
+def removeStopwords(str):
+	for stopword in arrStopword:
+		str = str.replace(stopword,"")
+	str = str.replace("  "," ")
+	return str
