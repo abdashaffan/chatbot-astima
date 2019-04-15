@@ -29,10 +29,6 @@
     left: 0;
 }
 
-.hidden {
-    visibility: hidden;
-}
-
 .sticker {
     position: absolute;
     bottom: 0;
