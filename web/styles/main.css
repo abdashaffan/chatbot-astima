@@ -1,14 +1,28 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto');
-
 * {
     box-sizing: border-box;
     padding: 0;
     margin: 0;
-    font-family: 'Roboto',
-        sans-serif;
-    background: rgb(250, 250, 250);
+    background: lightyellow;
 }
 
 #title {
-    color: tomato;
+    font-family: 'Montserrat', sans-serif;
+    color: #128c7e;
+    text-align: center;
+    margin: 0 1em;
+    padding: 1em;
+}
+
+.main-title {
+    font-size: 3em;
+    text-transform: uppercase;
+    letter-spacing: .7rem;
+}
+
+.sub-title {
+    font-weight: 300;
+}
+
+.hidden {
+    visibility: hidden;
 }

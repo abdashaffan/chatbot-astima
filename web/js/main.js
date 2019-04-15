@@ -1,12 +1,23 @@
 let chatCounter = 0;
 let NUM_STICKERS = 11;
-let windowChat = document.getElementById("chat-content");
+let judul = document.getElementById('title');
+let chatWindow = document.getElementById('chat-container');
+let chatContent = document.getElementById("chat-content");
 let kotakPesan = document.getElementById("text-msg");
 let tombolKirim = document.getElementById("text-btn");
 let tombolStiker = document.getElementById("sticker");
 let newline = document.createElement('br');
 let ERROR_MSG = "Maaf saya sedang offline, silakan coba beberapa saat lagi. ";
 let BOT_NAME = "Astimah";
+
+
+chatWindow.addEventListener('animationend', function () {
+    setTimeout(function () {
+        judul.classList.add('animated', 'fadeIn');
+        judul.classList.remove('hidden');
+    }, 300);
+})
+
 
 
 tombolKirim.addEventListener('click', function () {
@@ -75,7 +86,7 @@ function raiseAllChatHistory(chatHistories, upscale) {
 function processChat(myChat, botChat) {
     let initialChatHistories = document.querySelectorAll('.chat');
     myBlockChat = myMessage(myChat);
-    windowChat.appendChild(myBlockChat);
+    chatContent.appendChild(myBlockChat);
     if (chatCounter !== 1) {
         let myCurrentChatClass = `.chat${chatCounter}`;
         let myChatUpInPixels = document.querySelector(myCurrentChatClass).getBoundingClientRect().height;
@@ -85,7 +96,7 @@ function processChat(myChat, botChat) {
 
     let chatHistories = document.querySelectorAll('.chat'); //Masukkan pesan bot pada DOM secata hidden agar nilai height bisa diambil terlebih dahulu
     botResponse = botMessage(botChat);
-    windowChat.appendChild(botResponse);
+    chatContent.appendChild(botResponse);
     let botCurrentChatClass = `.chat${chatCounter}`;
     setTimeout(function () {
         //Angkat semua chat sebelum balasan bot ditampilkan (tidak di hidden)
@@ -100,7 +111,7 @@ function processChat(myChat, botChat) {
 function processSticker() {
     let initialChatHistories = document.querySelectorAll('.chat');
     myStickerChat = mySticker();
-    windowChat.appendChild(myStickerChat);
+    chatContent.appendChild(myStickerChat);
     if (chatCounter !== 1) {
         let myCurrentChatClass = `.chat${chatCounter}`;
         let myChatUpInPixels = document.querySelector(myCurrentChatClass).getBoundingClientRect().height;
@@ -110,7 +121,7 @@ function processSticker() {
 
     let chatHistories = document.querySelectorAll('.chat'); //Masukkan pesan bot pada DOM secata hidden agar nilai height bisa diambil terlebih dahulu
     botStickerChat = botSticker();
-    windowChat.appendChild(botStickerChat);
+    chatContent.appendChild(botStickerChat);
     let botCurrentChatClass = `.chat${chatCounter}`;
     setTimeout(function () {
         //Angkat semua chat sebelum balasan bot ditampilkan (tidak di hidden)

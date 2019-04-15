@@ -11,6 +11,7 @@ $timestamp = date("YmdHis");
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400|Roboto" rel="stylesheet">
     <link rel="stylesheet" href="styles/main.css?v=<?php echo $timestamp;?>">
     <link rel="stylesheet" href="styles/avatar.css?v=<?php echo $timestamp;?>">
     <link rel="stylesheet" href="styles/chatbox.css?v=<?php echo $timestamp;?>">
@@ -19,16 +20,17 @@ $timestamp = date("YmdHis");
     <title>Chatbot Stima</title>
 </head>
 <body>
-<!-- Di nerf dulu sampe chatboxnya kelar -->
-    <!-- <span id="title">
-        <span id="avatar-name">Astima</span><br>
-        <span id="avatar-subtitle">Your daily assistant</span>
-    </span> -->
+
+    <div id="title" class="hidden">
+        
+        <h1 class="main-title">A<span style="color:lightgreen;background:inherit;">stima</span>h</h1>
+        <h3 class="sub-title">Asisten pribadi anda</h3>
+    </div>
     
-    <div id="chat-container">
+    <div id="chat-container" class="animated bounceIn">
             <div id="chat-container-navbar">
                 <img src="assets/header.png" alt="avatar" class="bot-picture">
-                <span id="profile-name">A<span style="color:lightgreen;background:inherit;">stima</span>h</span>
+                <span id="profile-name">Astimah</span>
             </div> 
 
             <div id="chat-content"></div>
@@ -41,8 +43,6 @@ $timestamp = date("YmdHis");
             </form>
             
     </div>
-    <!-- Di nerf dulu avatarnya karena mengalihkan perhatian -->
-    <!-- <img src="assets/avatar5.png" alt="chatbot-avatar-image" id="avatar"> -->
 
     <script src="js/main.js?v=<?php echo $timestamp;?>"></script>
 </body>
