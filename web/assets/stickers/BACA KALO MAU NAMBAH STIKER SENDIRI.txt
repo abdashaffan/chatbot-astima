@@ -1,0 +1,5 @@
+Kalo mau nambah stiker:
+1. Harus tipe .png
+2. Harus ditaro di folder ini
+3. Namanya harus pake nomor (ikutin pola yang udah ada aja)
+3. Ganti nilai variabel NUM_STICKERS di web/js/main.js sesuai sama jumlah stiker di dalem folder stickers ini.

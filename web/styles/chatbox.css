@@ -11,8 +11,9 @@
     margin: auto;
     border-radius: 5px;
     color: #333;
-    overflow-x: hidden;
-    overflow-y: hidden;
+    /* overflow-x: hidden;
+    overflow-y: auto; */
+    /* overflow-y: visible; */
     display: flex;
     flex-direction: column;
 }
@@ -32,8 +33,12 @@
 }
 
 #chat-content {
+    overflow-y: hidden;
+    /* padding: 1em 0; */
     flex: 1 1 auto;
-    background: rgba(0, 0, 0, 0.05);
+    position: relative;
+    background: transparent;
+    /* background: rgba(0, 0, 0, 0.3); */
 }
 
 #chatform {
@@ -43,10 +48,10 @@
     padding: .5em 0;
     border-radius: 6px;
     margin: 1em auto;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    /* position: absolute; */
+    /* bottom: 0; */
+    /* left: 0; */
+    /* right: 0; */
     display: flex;
     justify-content: space-around;
     align-items: center;

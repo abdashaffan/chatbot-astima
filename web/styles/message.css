@@ -32,3 +32,21 @@
 .hidden {
     visibility: hidden;
 }
+
+.sticker {
+    position: absolute;
+    bottom: 0;
+    display: block;
+    background: transparent;
+    height: 100px;
+    width: auto;
+}
+
+.my-sticker {
+    right: 0;
+    margin-right: 10px;
+}
+
+.bot-sticker {
+    position: initial;
+}
