@@ -29,8 +29,11 @@ $timestamp = date("YmdHis");
             <div id="chat-container-navbar">
                 <img src="assets/header.png" alt="avatar" class="bot-picture">
                 <span id="profile-name">Asti </span>
-            </div>  
-            <form action="" id="chatbox">
+            </div> 
+
+            <div id="chat-content"></div>
+
+            <form action="" id="chatform">
                 <input type="text" name="text" id="text-msg" placeholder="Kirimi Astima pesan" autofocus autocomplete="off" >
         
                 <i class="material-icons md-dark" id="sticker">tag_faces</i>

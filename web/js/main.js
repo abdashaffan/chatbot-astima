@@ -1,5 +1,5 @@
 let chatCounter = 0;
-let windowChat = document.getElementById("chat-container");
+let windowChat = document.getElementById("chat-content");
 let kotakPesan = document.getElementById("text-msg");
 let tombolKirim = document.getElementById("text-btn");
 let newline = document.createElement('br');
@@ -16,7 +16,7 @@ tombolKirim.addEventListener('click', function (e) {
 function myMessage(message) {
     let chat = document.createElement("span");
     chatCounter++;
-    chat.classList.add('message', 'my-message', 'chat', 'chat' + chatCounter.toString());
+    chat.classList.add('message', 'my-message', 'chat', 'chat' + chatCounter.toString(), 'hidden');
     chat.innerText = message;
     return chat;
 }
@@ -26,30 +26,52 @@ function botMessage(message) {
     chatCounter++;
     chat.classList.add('message', 'bot-message', 'chat', 'chat' + chatCounter.toString(), 'hidden');
     chat.innerHTML = `
-        <p class="bot-blockchat-name">${BOT_NAME}</p><br>${message}
+        <p class="bot-blockchat-name">${BOT_NAME}</p>${message}
     `;
     return chat;
 }
 
 function raiseAllChatHistory(chatHistories, upscale) {
-    let allPastChats = [].slice.call(chatHistories); //mengubah nodeList ke array sudah pengolahan lebih mudah
-    let scale = upscale.height;
-    allPastChats.forEach(function () {
-        console.log(`bergerak ke atas sebesar ${scale}`); //harusnya pake fungsi transisi
-    });
+    console.log(upscale);
+    for (let i = 0; i < chatHistories.length; i++) {
+        // let tag = `.chat${i}`;
+
+        let currentHeight = window.getComputedStyle(chatHistories[i]).bottom;
+        currentHeight = Number(currentHeight.slice(0, -2));
+        console.log(currentHeight, typeof currentHeight);
+
+        let finalHeight = currentHeight + upscale;
+        console.log(finalHeight);
+
+        chatHistories[i].style.bottom = `${currentHeight + upscale + 10}px`;
+
+
+    }
+
 }
 
 function processChat(myChat, botChat) {
+    let initialChatHistories = document.querySelectorAll('.chat');
     myBlockChat = myMessage(myChat);
     windowChat.appendChild(myBlockChat);
-    let chatHistories = document.querySelectorAll('.chat');
+    if (chatCounter !== 1) {
+        let myCurrentChatClass = `.chat${chatCounter}`;
+        console.log(myCurrentChatClass);
+        let myChatUpInPixels = document.querySelector(myCurrentChatClass).getBoundingClientRect().height;
+        raiseAllChatHistory(initialChatHistories, myChatUpInPixels);
+    }
+    myBlockChat.classList.remove('hidden');
+
+    let chatHistories = document.querySelectorAll('.chat'); //Masukkan pesan bot pada DOM secata hidden agar nilai height bisa diambil terlebih dahulu
     botResponse = botMessage(botChat);
     windowChat.appendChild(botResponse);
-    let currentChatClass = `.chat${chatCounter}`;
+    let botCurrentChatClass = `.chat${chatCounter}`;
     setTimeout(function () {
-        let upInPixels = document.querySelector(currentChatClass).getBoundingClientRect();
-        raiseAllChatHistory(chatHistories, upInPixels);
-        botResponse.classList.remove('hidden');
+        //Angkat semua chat sebelum balasan bot ditampilkan (tidak di hidden)
+        let botChatUpInPixels = document.querySelector(botCurrentChatClass).getBoundingClientRect().height;
+        raiseAllChatHistory(chatHistories, botChatUpInPixels);
+        botResponse.classList.remove('hidden'); //Perlihatkan respon bot
+
     }, 1000);
 
 }
