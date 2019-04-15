@@ -60,7 +60,7 @@ function botSticker() {
     chatCounter++;
     chat.classList.add('message', 'bot-message', 'chat', 'chat' + chatCounter.toString(), 'hidden');
     chat.innerHTML = `
-        <p class="bot-blockchat-name">${BOT_NAME}</p><br>
+        <span class="bot-blockchat-name">${BOT_NAME}</span><br>
     `;
     let sticker = document.createElement('img');
     let num = Math.floor((Math.random() * NUM_STICKERS) + 1);
@@ -76,7 +76,7 @@ function botMessage(message) {
     chatCounter++;
     chat.classList.add('message', 'bot-message', 'chat', 'chat' + chatCounter.toString(), 'hidden');
     chat.innerHTML = `
-        <p class="bot-blockchat-name">${BOT_NAME}</p>${message}
+        <span class="bot-blockchat-name">${BOT_NAME}</span><br>${message}
     `;
     return chat;
 }
