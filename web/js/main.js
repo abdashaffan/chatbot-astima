@@ -1,5 +1,5 @@
-let chatCounter = 0;
 let NUM_STICKERS = 11;
+let chatCounter = 0;
 let judul = document.getElementById('title');
 let chatWindow = document.getElementById('chat-container');
 let chatContent = document.getElementById("chat-content");
@@ -7,23 +7,30 @@ let kotakPesan = document.getElementById("text-msg");
 let tombolKirim = document.getElementById("text-btn");
 let tombolStiker = document.getElementById("sticker");
 let newline = document.createElement('br');
-let ERROR_MSG = "Maaf saya sedang offline, silakan coba beberapa saat lagi. ";
-let BOT_NAME = "Astimah";
+let BOT_NAME = "Asti";
+let BOT_ERROR_MSG = `Maaf ${BOT_NAME} sedang offline nih, silakan coba beberapa saat lagi ya. `;
+let BOT_GREETINGS = `Haloo, saya Asti, apa yang bisa saya bantu hari ini?`;
 
 
 chatWindow.addEventListener('animationend', function () {
     setTimeout(function () {
         judul.classList.add('animated', 'fadeIn');
         judul.classList.remove('hidden');
-    }, 300);
+    }, 750);
 })
 
-
+judul.addEventListener('animationend', function () {
+    setTimeout(function () {
+        let botGreetings = botMessage(BOT_GREETINGS);
+        chatContent.appendChild(botGreetings);
+        botGreetings.classList.remove('hidden');
+    }, 300);
+});
 
 tombolKirim.addEventListener('click', function () {
     let message = kotakPesan.value;
     if (message !== "") {
-        processChat(message, ERROR_MSG); //sementara
+        processChat(message, BOT_ERROR_MSG); //sementara
         kotakPesan.value = '';
     }
 });
@@ -94,7 +101,7 @@ function processChat(myChat, botChat) {
     }
     myBlockChat.classList.remove('hidden');
 
-    let chatHistories = document.querySelectorAll('.chat'); //Masukkan pesan bot pada DOM secata hidden agar nilai height bisa diambil terlebih dahulu
+    let chatHistories = document.querySelectorAll('.chat'); //Masukkan pesan bot pada DOM secara hidden agar nilai height bisa diambil terlebih dahulu
     botResponse = botMessage(botChat);
     chatContent.appendChild(botResponse);
     let botCurrentChatClass = `.chat${chatCounter}`;

@@ -30,13 +30,13 @@ $timestamp = date("YmdHis");
     <div id="chat-container" class="animated bounceIn">
             <div id="chat-container-navbar">
                 <img src="assets/header.png" alt="avatar" class="bot-picture">
-                <span id="profile-name">Astimah</span>
+                <span id="profile-name">Asti</span>
             </div> 
 
             <div id="chat-content"></div>
 
             <form action="" id="chatform" onkeypress="return event.keyCode != 13;">
-                <input type="text" name="text" id="text-msg" placeholder="Chat astimah sekarang" autofocus autocomplete="off" >
+                <input type="text" name="text" id="text-msg" placeholder="Ada yang bisa asti bantu?" autofocus autocomplete="off" >
         
                 <i class="material-icons md-dark" id="sticker">tag_faces</i>
                 <i class="material-icons md-dark" id="text-btn">send</i>

@@ -5,7 +5,8 @@
     background: url(../assets/wallpaper.png) center no-repeat;
     background-size: cover;
     min-height: 70vh;
-    width: 40vw;
+    min-width: 50vw;
+    max-width: 60vw;
     margin: 1em auto;
     position: relative;
     margin: auto;
