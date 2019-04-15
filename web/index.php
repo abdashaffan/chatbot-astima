@@ -28,13 +28,13 @@ $timestamp = date("YmdHis");
     <div id="chat-container">
             <div id="chat-container-navbar">
                 <img src="assets/header.png" alt="avatar" class="bot-picture">
-                <span id="profile-name">Asti </span>
+                <span id="profile-name">A<span style="color:lightgreen;background:inherit;">stima</span>h</span>
             </div> 
 
             <div id="chat-content"></div>
 
-            <form action="" id="chatform">
-                <input type="text" name="text" id="text-msg" placeholder="Kirimi Astima pesan" autofocus autocomplete="off" >
+            <form action="" id="chatform" onkeypress="return event.keyCode != 13;">
+                <input type="text" name="text" id="text-msg" placeholder="Chat astimah sekarang" autofocus autocomplete="off" >
         
                 <i class="material-icons md-dark" id="sticker">tag_faces</i>
                 <i class="material-icons md-dark" id="text-btn">send</i>

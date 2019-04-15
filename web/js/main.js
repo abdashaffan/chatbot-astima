@@ -3,15 +3,19 @@ let windowChat = document.getElementById("chat-content");
 let kotakPesan = document.getElementById("text-msg");
 let tombolKirim = document.getElementById("text-btn");
 let newline = document.createElement('br');
-let ERROR_MSG = "Maaf saya sedang offline.";
-let BOT_NAME = "Asti";
+let ERROR_MSG = "Maaf saya sedang offline, silakan coba beberapa saat lagi. ";
+let BOT_NAME = "Astimah";
+
 
 tombolKirim.addEventListener('click', function (e) {
     e.preventDefault();
     let message = kotakPesan.value;
-    processChat(message, ERROR_MSG); //sementara
-    kotakPesan.value = '';
+    if (message !== "") {
+        processChat(message, ERROR_MSG); //sementara
+        kotakPesan.value = '';
+    }
 });
+
 
 function myMessage(message) {
     let chat = document.createElement("span");
@@ -32,16 +36,16 @@ function botMessage(message) {
 }
 
 function raiseAllChatHistory(chatHistories, upscale) {
-    console.log(upscale);
+
     for (let i = 0; i < chatHistories.length; i++) {
-        // let tag = `.chat${i}`;
+
 
         let currentHeight = window.getComputedStyle(chatHistories[i]).bottom;
         currentHeight = Number(currentHeight.slice(0, -2));
-        console.log(currentHeight, typeof currentHeight);
+
 
         let finalHeight = currentHeight + upscale;
-        console.log(finalHeight);
+
 
         chatHistories[i].style.bottom = `${currentHeight + upscale + 10}px`;
 
@@ -56,7 +60,6 @@ function processChat(myChat, botChat) {
     windowChat.appendChild(myBlockChat);
     if (chatCounter !== 1) {
         let myCurrentChatClass = `.chat${chatCounter}`;
-        console.log(myCurrentChatClass);
         let myChatUpInPixels = document.querySelector(myCurrentChatClass).getBoundingClientRect().height;
         raiseAllChatHistory(initialChatHistories, myChatUpInPixels);
     }

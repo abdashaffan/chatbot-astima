@@ -6,7 +6,7 @@
     /*word-break supaya chat gak keluar windowChat kalo panjang*/
     word-break: break-all;
     max-width: 75%;
-    bottom: 70px;
+    bottom: 0;
     display: block;
     z-index: 1;
 }
