@@ -23,8 +23,8 @@ $timestamp = date("YmdHis");
 
     <div id="title" class="hidden">
         
-        <h1 class="main-title">A<span style="color:lightgreen;background:inherit;">stima</span>h</h1>
-        <h3 class="sub-title">Asisten pribadi anda</h3>
+        <h1 class="main-title">Astimah</h1>
+        <h3 class="sub-title">Your random trivia questions bot</h3>
     </div>
     
     <div id="chat-container" class="animated bounceIn">
@@ -36,14 +36,16 @@ $timestamp = date("YmdHis");
             <div id="chat-content"></div>
 
             <form action="" id="chatform" onkeypress="return event.keyCode != 13;">
-                <input type="text" name="text" id="text-msg" placeholder="Ada yang bisa asti bantu?" autofocus autocomplete="off" >
+                <input type="text" name="text" id="text-msg" placeholder="What can i do for you?" autofocus autocomplete="off" >
         
                 <i class="material-icons md-dark" id="sticker">tag_faces</i>
                 <i class="material-icons md-dark" id="text-btn">send</i>
             </form>
             
     </div>
-
+    <div id="footer">
+        view on <a href="https://github.com/abdashaffan/chatbot-astima"target="_BLANK" id="github-link">github</a>
+    </div>
     <script src="js/main.js?v=<?php echo $timestamp;?>"></script>
 </body>
 </html>
