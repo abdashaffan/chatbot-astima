@@ -3,10 +3,10 @@
     margin: 1rem 0;
     font-size: 1rem;
     padding: .5rem;
-    /*word-break supaya chat gak keluar windowChat kalo panjang*/
+    /*word-break supaya chat gak keluar chatWindow kalo chatnya panjang*/
     word-break: break-all;
     max-width: 50%;
-    top: 20px;
+    top: 300px;
     display: block;
     z-index: 1;
 }
@@ -36,19 +36,7 @@
 .sticker {
     margin: 15px;
     position: relative;
-    bottom: 0;
     background: transparent;
     height: 100px;
     width: auto;
-}
-
-.my-sticker {
-    display: block;
-    margin-right: 1rem;
-    float: right;
-    clear: left;
-}
-
-.bot-sticker {
-    position: initial;
 }

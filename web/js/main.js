@@ -1,15 +1,19 @@
-let NUM_STICKERS = 11;
+const NUM_STICKERS = 11;
 let chatCounter = 0;
 let judul = document.getElementById('title');
 let chatWindow = document.getElementById('chat-container');
 let chatContent = document.getElementById("chat-content");
-let kotakPesan = document.getElementById("text-msg");
-let tombolKirim = document.getElementById("text-btn");
-let tombolStiker = document.getElementById("sticker");
+let input = document.getElementById("chatform");
+let chatBox = document.getElementById("text-msg");
+let chatButton = document.getElementById("text-btn");
+let stickerButton = document.getElementById("sticker");
 let newline = document.createElement('br');
 let BOT_NAME = "Asti";
 let BOT_ERROR_MSG = `Maaf ${BOT_NAME} sedang offline nih, silakan coba beberapa saat lagi ya. `;
 let BOT_GREETINGS = `Haloo, saya Asti, apa yang bisa saya bantu hari ini?`;
+
+// buat handle sticker button
+let stickerBtnClickable = true;
 
 
 chatWindow.addEventListener('animationend', function () {
@@ -23,27 +27,42 @@ judul.addEventListener('animationend', function () {
     setTimeout(function () {
         let botGreetings = botMessage(BOT_GREETINGS);
         chatContent.appendChild(botGreetings);
+        chatContent.scrollTop = chatContent.scrollHeight;
+        chatBox.focus();
     }, 300);
 });
 
-tombolKirim.addEventListener('click', function () {
-    let message = kotakPesan.value;
+chatButton.addEventListener('click', function () {
+    let message = chatBox.value;
     if (message !== "") {
         processChat(message, BOT_ERROR_MSG); //sementara
-        kotakPesan.value = '';
+        chatBox.value = '';
     }
 });
 
-tombolStiker.addEventListener('click', processSticker);
+input.addEventListener('click', function () {
+    chatBox.focus();
+});
+
+stickerButton.addEventListener('click', function () {
+    if (stickerBtnClickable) {
+        stickerBtnClickable = false;
+        processSticker();
+    }
+});
+
 
 function mySticker() {
+    let chat = document.createElement("span");
+    chatCounter++;
+    chat.classList.add('message', 'my-message', 'chat', 'chat' + chatCounter.toString());
     let sticker = document.createElement('img');
     let num = Math.floor((Math.random() * NUM_STICKERS) + 1);
     let src = `../web/assets/stickers/${num}.png`;
     sticker.setAttribute('src', src);
-    chatCounter++;
-    sticker.classList.add('sticker', 'my-sticker', 'chat', 'chat' + chatCounter.toString());
-    return sticker;
+    sticker.classList.add('sticker', 'my-sticker');
+    chat.appendChild(sticker);
+    return chat;
 }
 
 function myMessage(message) {
@@ -88,6 +107,7 @@ function processChat(myChat, botChat) {
         botResponse = botMessage(botChat);
         chatContent.appendChild(botResponse);
         chatContent.scrollTop = chatContent.scrollHeight;
+        chatBox.focus();
     }, 500);
 }
 
@@ -99,5 +119,9 @@ function processSticker() {
         botStickerChat = botSticker();
         chatContent.appendChild(botStickerChat);
         chatContent.scrollTop = chatContent.scrollHeight;
+        chatBox.focus();
+        setTimeout(function () {
+            stickerBtnClickable = true;
+        }, 200);
     }, 500);
 }
