@@ -1,3 +1,5 @@
+'use strict';
+
 // DOM Node selector
 const judul = document.getElementById('title');
 const chatWindow = document.getElementById('chat-container');
@@ -28,11 +30,16 @@ const BOT_SELECT_MODE_MSG = `
     </span>
 `;
 
-let chatCounter = 0;
 let isGameStarted = false;
 let gameMode = 0;
-let score = 0;
 
+let addScore = (function () {
+    let score = 0;
+    return function () {
+        score += points;
+        return score;
+    }
+})();
 
 
 chatWindow.addEventListener('animationend', function () {
@@ -109,8 +116,7 @@ function handleMessage(message) {
 
 function mySticker() {
     let chat = document.createElement("span");
-    chatCounter++;
-    chat.classList.add('message', 'my-message', 'chat', 'chat' + chatCounter.toString());
+    chat.classList.add('message', 'my-message', 'chat');
     let sticker = document.createElement('img');
     let num = Math.floor((Math.random() * NUM_STICKERS) + 1);
     let src = `../web/assets/stickers/${num}.png`;
@@ -122,8 +128,7 @@ function mySticker() {
 
 function myMessage(message) {
     let chat = document.createElement("span");
-    chatCounter++;
-    chat.classList.add('message', 'my-message', 'chat', 'chat' + chatCounter.toString());
+    chat.classList.add('message', 'my-message', 'chat');
     chat.innerText = message;
     return chat;
 }
@@ -131,8 +136,7 @@ function myMessage(message) {
 
 function botSticker() {
     let chat = document.createElement("span");
-    chatCounter++;
-    chat.classList.add('message', 'bot-message', 'chat', 'chat' + chatCounter.toString());
+    chat.classList.add('message', 'bot-message', 'chat');
     chat.innerHTML = `
         <span class="bot-blockchat-name">${BOT_NAME}</span><br>
     `;
@@ -147,8 +151,7 @@ function botSticker() {
 
 function botMessage(message) {
     let chat = document.createElement("span");
-    chatCounter++;
-    chat.classList.add('message', 'bot-message', 'chat', 'chat' + chatCounter.toString());
+    chat.classList.add('message', 'bot-message', 'chat');
     chat.innerHTML = `
         <span class="bot-blockchat-name">${BOT_NAME}</span><br>${message}
     `;
