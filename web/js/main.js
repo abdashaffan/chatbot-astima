@@ -23,7 +23,6 @@ judul.addEventListener('animationend', function () {
     setTimeout(function () {
         let botGreetings = botMessage(BOT_GREETINGS);
         chatContent.appendChild(botGreetings);
-        botGreetings.classList.remove('hidden');
     }, 300);
 });
 
@@ -50,7 +49,7 @@ function mySticker() {
 function myMessage(message) {
     let chat = document.createElement("span");
     chatCounter++;
-    chat.classList.add('message', 'my-message', 'chat', 'chat' + chatCounter.toString(), 'hidden');
+    chat.classList.add('message', 'my-message', 'chat', 'chat' + chatCounter.toString());
     chat.innerText = message;
     return chat;
 }
@@ -58,7 +57,7 @@ function myMessage(message) {
 function botSticker() {
     let chat = document.createElement("span");
     chatCounter++;
-    chat.classList.add('message', 'bot-message', 'chat', 'chat' + chatCounter.toString(), 'hidden');
+    chat.classList.add('message', 'bot-message', 'chat', 'chat' + chatCounter.toString());
     chat.innerHTML = `
         <span class="bot-blockchat-name">${BOT_NAME}</span><br>
     `;
@@ -74,67 +73,31 @@ function botSticker() {
 function botMessage(message) {
     let chat = document.createElement("span");
     chatCounter++;
-    chat.classList.add('message', 'bot-message', 'chat', 'chat' + chatCounter.toString(), 'hidden');
+    chat.classList.add('message', 'bot-message', 'chat', 'chat' + chatCounter.toString());
     chat.innerHTML = `
         <span class="bot-blockchat-name">${BOT_NAME}</span><br>${message}
     `;
     return chat;
 }
 
-function raiseAllChatHistory(chatHistories, upscale) {
-    for (let i = 0; i < chatHistories.length; i++) {
-        let currentHeight = window.getComputedStyle(chatHistories[i]).bottom;
-        currentHeight = Number(currentHeight.slice(0, -2));
-        chatHistories[i].style.bottom = `${currentHeight + upscale + 10}px`;
-    }
-
-}
-
 function processChat(myChat, botChat) {
-    let initialChatHistories = document.querySelectorAll('.chat');
     myBlockChat = myMessage(myChat);
     chatContent.appendChild(myBlockChat);
-    if (chatCounter !== 1) {
-        let myCurrentChatClass = `.chat${chatCounter}`;
-        let myChatUpInPixels = document.querySelector(myCurrentChatClass).getBoundingClientRect().height;
-        raiseAllChatHistory(initialChatHistories, myChatUpInPixels);
-    }
-    myBlockChat.classList.remove('hidden');
-
-    let chatHistories = document.querySelectorAll('.chat'); //Masukkan pesan bot pada DOM secara hidden agar nilai height bisa diambil terlebih dahulu
-    botResponse = botMessage(botChat);
-    chatContent.appendChild(botResponse);
-    let botCurrentChatClass = `.chat${chatCounter}`;
+    chatContent.scrollTop = chatContent.scrollHeight;
     setTimeout(function () {
-        //Angkat semua chat sebelum balasan bot ditampilkan (tidak di hidden)
-        let botChatUpInPixels = document.querySelector(botCurrentChatClass).getBoundingClientRect().height;
-        raiseAllChatHistory(chatHistories, botChatUpInPixels);
-        botResponse.classList.remove('hidden'); //Perlihatkan respon bot
-
+        botResponse = botMessage(botChat);
+        chatContent.appendChild(botResponse);
+        chatContent.scrollTop = chatContent.scrollHeight;
     }, 500);
-
 }
 
 function processSticker() {
-    let initialChatHistories = document.querySelectorAll('.chat');
     myStickerChat = mySticker();
     chatContent.appendChild(myStickerChat);
-    if (chatCounter !== 1) {
-        let myCurrentChatClass = `.chat${chatCounter}`;
-        let myChatUpInPixels = document.querySelector(myCurrentChatClass).getBoundingClientRect().height;
-        raiseAllChatHistory(initialChatHistories, myChatUpInPixels);
-    }
-    myStickerChat.classList.remove('hidden');
-
-    let chatHistories = document.querySelectorAll('.chat'); //Masukkan pesan bot pada DOM secata hidden agar nilai height bisa diambil terlebih dahulu
-    botStickerChat = botSticker();
-    chatContent.appendChild(botStickerChat);
-    let botCurrentChatClass = `.chat${chatCounter}`;
+    chatContent.scrollTop = chatContent.scrollHeight;
     setTimeout(function () {
-        //Angkat semua chat sebelum balasan bot ditampilkan (tidak di hidden)
-        let botChatUpInPixels = document.querySelector(botCurrentChatClass).getBoundingClientRect().height;
-        raiseAllChatHistory(chatHistories, botChatUpInPixels);
-        botStickerChat.classList.remove('hidden'); //Perlihatkan respon bot
-
+        botStickerChat = botSticker();
+        chatContent.appendChild(botStickerChat);
+        chatContent.scrollTop = chatContent.scrollHeight;
     }, 500);
 }
