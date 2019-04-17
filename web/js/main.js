@@ -77,7 +77,7 @@ function myMessage(message) {
 
 function botSticker() {
     let chat = document.createElement("span");
-    chat.classList.add('message', 'bot-message', 'chat');
+    chat.classList.add('message', 'bot-message', 'chat', 'bot-sticker-wrapper');
     chat.innerHTML = `
         <span class="bot-blockchat-name">${BOT_NAME}</span><br>
     `;

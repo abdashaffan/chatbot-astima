@@ -33,6 +33,10 @@
     clear: left;
 }
 
+.bot-sticker-wrapper {
+    clear: right;
+}
+
 .sticker {
     margin: 15px;
     position: relative;
