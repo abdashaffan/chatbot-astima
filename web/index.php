@@ -17,7 +17,7 @@ $timestamp = date("YmdHis");
     <link rel="stylesheet" href="styles/chatbox.css?v=<?php echo $timestamp;?>">
     <link rel="stylesheet" href="styles/message.css?v=<?php echo $timestamp;?>">
     <link rel="stylesheet" href="styles/bot.css?v=<?php echo $timestamp;?>">
-    <title>Chatbot Stima</title>
+    <title>Astimah - Trivia questions bot</title>
 </head>
 <body>
 

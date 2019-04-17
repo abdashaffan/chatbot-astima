@@ -16,13 +16,34 @@ const BOT_NAME = "Asti";
 
 const BOT_CMD_START = "/start";
 const BOT_CMD_HELP = "/help";
-const BOT_CMD_MODE_RANDOM = "/setrandom";
-const BOT_CMD_MODE_SPECIFIC = "/setspecific";
+const BOT_CMD_MODE_RANDOM = "/random";
+const BOT_CMD_MODE_SPECIFIC = "/specific";
+const BOT_CMD_GIVEUP = "/giveup";
+const BOT_CMD_EXIT = "/exit";
 
-const BOT_UNDEFINED_MSG = "Invalid Command";
-const BOT_ERROR_MSG = `Sorry i can't answer your chat, please try again in a few moments`;
-const BOT_HELP_MSG = `To start answering questions, please type <span class = "command" >${BOT_CMD_START}</span >`;
-const BOT_GREETINGS_MSG = `Hello, i'm ${BOT_NAME}.<br>${BOT_HELP_MSG}`;
+
+const BOT_ERROR_MSG = `ERROR`;
+const BOT_FETCH_ERROR_MSG = `
+    <span style="background:inherit;">
+        Sorry there was a mistake when loading your questions. please try again in a few moments.
+    </span>
+`;
+const BOT_GREETINGS_MSG = `
+    <span style="background:inherit;">
+        Hello, i'm ${BOT_NAME}.
+    </span>
+`;
+const BOT_HELP_MSG = ` 
+    <span style="background:inherit;">
+        Please type: <br>
+        <span class = "command" >${BOT_CMD_START}</span > to start the game<br>
+        <span class = "command" >${BOT_CMD_HELP}</span > to show help<br>
+        <span class = "command" >${BOT_CMD_MODE_RANDOM}</span > to set question mode to random<br>
+        <span class = "command" >${BOT_CMD_MODE_SPECIFIC}</span > to set question mode to specific<br>
+        <span class = "command" >${BOT_CMD_GIVEUP}</span > to giveup the current question<br>
+        <span class = "command" >${BOT_CMD_EXIT}</span > to exit current session<br>
+    </span>  
+    `;
 const BOT_SELECT_MODE_MSG = `
     <span style="background:inherit;">
             1. Type <span class="command">${BOT_CMD_MODE_RANDOM}</span> to answer random question with different categories <br><br>
@@ -30,88 +51,8 @@ const BOT_SELECT_MODE_MSG = `
     </span>
 `;
 
-let isGameStarted = false;
-let gameMode = 0;
-
-let addScore = (function () {
-    let score = 0;
-    return function () {
-        score += points;
-        return score;
-    }
-})();
 
 
-chatWindow.addEventListener('animationend', function () {
-    setTimeout(function () {
-        judul.classList.add('animated', 'fadeIn');
-        judul.classList.remove('hidden');
-    }, 750);
-})
-
-judul.addEventListener('animationend', function () {
-    setTimeout(function () {
-        let botGreetings = botMessage(BOT_GREETINGS_MSG);
-        chatContent.appendChild(botGreetings);
-        chatContent.scrollTop = chatContent.scrollHeight;
-        chatBox.focus();
-    }, 300);
-});
-
-chatButton.addEventListener('click', function () {
-    let message = chatBox.value;
-    if (message !== "") {
-        processChat(message, handleMessage(message));
-        chatBox.value = '';
-    }
-});
-
-input.addEventListener('click', function () {
-    chatBox.focus();
-});
-
-// buat handle sticker button
-let stickerBtnClickable = true;
-stickerButton.addEventListener('click', function () {
-    if (stickerBtnClickable) {
-        stickerBtnClickable = false;
-        processSticker();
-    }
-});
-
-
-function handleMessage(message) {
-    if (!isGameStarted && message === BOT_CMD_START) {
-        isGameStarted = true;
-        return BOT_SELECT_MODE_MSG;
-    } else if (isGameStarted) {
-        let prefix = '';
-        if (!gameMode) { //gameMode belum diset
-            prefix = `Okay, let's play`;
-            if (message === BOT_CMD_MODE_RANDOM) {
-                gameMode = 1;
-                return `${prefix} random question mode..`;
-            } else if (message === BOT_CMD_MODE_SPECIFIC) {
-                gameMode = 2;
-                return `${prefix} specific question mode..`;
-            }
-            return BOT_UNDEFINED_MSG;
-        } else {
-            prefix = `Change game mode to`;
-            if (message === BOT_CMD_MODE_RANDOM && gameMode != 1) {
-                gameMode = 1;
-                return `${prefix} random question mode..`;
-            } else if (message === BOT_CMD_MODE_SPECIFIC && gameMode != 2) {
-                gameMode = 2;
-                return `${prefix} specific question mode..`;
-            } else {
-                return BOT_UNDEFINED_MSG;
-            }
-        }
-    } else {
-        return BOT_HELP_MSG;
-    }
-}
 
 
 function mySticker() {
@@ -165,20 +106,20 @@ function send(chatNode) {
 
 
 function processChat(myChat, botChat) {
-    myBlockChat = myMessage(myChat);
+    let myBlockChat = myMessage(myChat);
     send(myBlockChat);
     setTimeout(function () {
-        botResponse = botMessage(botChat);
+        let botResponse = botMessage(botChat);
         send(botResponse);
         chatBox.focus();
     }, 500);
 }
 
 function processSticker() {
-    myStickerChat = mySticker();
+    let myStickerChat = mySticker();
     send(myStickerChat);
     setTimeout(function () {
-        botStickerChat = botSticker();
+        let botStickerChat = botSticker();
         send(botStickerChat);
         setTimeout(function () {
             stickerBtnClickable = true;
@@ -186,3 +127,82 @@ function processSticker() {
         }, 200);
     }, 500);
 }
+
+// function playRandomMode(userAnswer) {
+//     let question = '';
+//     let answer = '';
+//     fetch("http://jservice.io/api/random?1")
+//         .then(res => res.json())
+//         .then((data) => {
+//             question = data[0].question;
+//             answer = data[0].answer;
+//             return play(userAnswer, question, answer);
+//         })
+//         .catch(function (err) {
+//             console.log(err);
+//             return (BOT_FETCH_ERROR_MSG);
+//         });
+// }
+
+// function playSpecificMode(userAnswer, id) {
+//     let question = '';
+//     let answer = '';
+//     fetch(`http://jservice.io/api/category?id=${id}`)
+//         .then(res => res.json())
+//         .then((data) => {
+//             let questionNum = data.clues[Math.floor(Math.random() * data.clues.length)];
+//             question = data.clues[questionNum].question;
+//             answer = data.clues[questionNum].answer;
+//             return play(userAnswer, question, answer);
+//         })
+//         .catch(function (err) {
+//             console.log(err);
+//             return (BOT_FETCH_ERROR_MSG);
+//         });
+// }
+
+
+
+let isGameStarted = false;
+let gameMode = 0;
+let stickerBtnClickable = true;
+let popularCategoryId = [ //dari jService.io/popular
+    136, 42, 21, 25, 103, 442, 114, 49, 530, 672, 78, 680, 99, 309, 218, 1079, 197, 2537
+];
+let questionId = -1;
+
+
+chatWindow.addEventListener('animationend', function () {
+    setTimeout(function () {
+        judul.classList.add('animated', 'fadeIn');
+        judul.classList.remove('hidden');
+    }, 750);
+})
+judul.addEventListener('animationend', function () {
+    // setTimeout(function () {
+    let botGreetings = botMessage(BOT_GREETINGS_MSG);
+    let botHelp = botMessage(BOT_HELP_MSG);
+    send(botGreetings);
+    setTimeout(function () {
+        console.log('yo');
+        send(botHelp);
+    }, 500);
+    chatBox.focus();
+    // }, 300);
+});
+input.addEventListener('click', function () {
+    chatBox.focus();
+});
+stickerButton.addEventListener('click', function () {
+    if (stickerBtnClickable) {
+        stickerBtnClickable = false;
+        processSticker();
+    }
+});
+chatButton.addEventListener('click', function () {
+    let message = chatBox.value;
+    if (message !== "") {
+        processChat(message, BOT_ERROR_MSG);
+        chatBox.value = '';
+    }
+});
