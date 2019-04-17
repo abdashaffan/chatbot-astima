@@ -98,17 +98,6 @@ function send(chatNode) {
     chatContent.scrollTop = chatContent.scrollHeight;
 }
 
-
-// function processChat(myChat, botChat) {
-//     let myBlockChat = myMessage(myChat);
-//     send(myBlockChat);
-//     setTimeout(function () {
-//         let botResponse = botMessage(botChat);
-//         send(botResponse);
-//         chatBox.focus();
-//     }, 500);
-// }
-
 function processSticker() {
     let myStickerChat = mySticker();
     send(myStickerChat);
@@ -129,61 +118,19 @@ function isUndefined(item) {
 function isEqual(item1, item2) {
     return (item1 === item2);
 }
-// function playRandomMode(userAnswer) {
-//     let question = '';
-//     let answer = '';
-//     fetch("http://jservice.io/api/random?1")
-//         .then(res => res.json())
-//         .then((data) => {
-//             question = data[0].question;
-//             answer = data[0].answer;
-//             return play(userAnswer, question, answer);
-//         })
-//         .catch(function (err) {
-//             console.log(err);
-//             return (BOT_FETCH_ERROR_MSG);
-//         });
-// }
 
-// function playSpecificMode(userAnswer, id) {
-//     let question = '';
-//     let answer = '';
-//     fetch(`http://jservice.io/api/category?id=${id}`)
-//         .then(res => res.json())
-//         .then((data) => {
-//             let questionNum = data.clues[Math.floor(Math.random() * data.clues.length)];
-//             question = data.clues[questionNum].question;
-//             answer = data.clues[questionNum].answer;
-//             return play(userAnswer, question, answer);
-//         })
-//         .catch(function (err) {
-//             console.log(err);
-//             return (BOT_FETCH_ERROR_MSG);
-//         });
-// }
-
-function getRandomQuestionData() {
-    fetch("http://jservice.io/api/random?1")
-        .then(res => res.json())
-        .then(data => data)
-        .catch(function (err) {
-            console.log(err);
-            send(botMessage((BOT_FETCH_ERROR_MSG)));
-            return;
-        });
+function isAnswerCorrect(input, answer) {
+    return (input.toLowerCase() === answer.toLowerCase());
 }
 
-function getSpecificQuestionData(id) {
-    fetch(`http://jservice.io/api/category?id=${id}`)
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-            return data;
-        })
-        .catch(err => {
-            console.log(err);
-            send(botMessage(BOT_FETCH_ERROR_MSG));
-        });
+function stopCurrentSession() {
+    session.resetAnswer();
+    session.resetSpecificQuestion();
+    session.resetquestionId();
+    gameStatus.resetGameMode();
+    gameStatus.stopGame();
+    session.stopQuestionSession();
+    send(botMessage(`Session stopped`));
 }
 
 function handleUserInput(input) {
@@ -207,16 +154,74 @@ function handleUserInput(input) {
 
     }
     //kalo belum milih game mode
-    if (gameStatus.isGameStarted()) {
-        if (isUndefined(gameStatus.currentGameMode())) {
-            // /random
-            if (isEqual(input, BOT_CMD_MODE_RANDOM)) {
-                gameStatus.setGameMode(1);
-                session.startQuestionSession();
-                send(botMessage(`Let's play random question session`));
+    if (gameStatus.isGameStarted() && isUndefined(gameStatus.currentGameMode())) {
+
+        // /random
+        if (isEqual(input, BOT_CMD_MODE_RANDOM)) {
+            gameStatus.setGameMode(1);
+            session.startQuestionSession();
+
+            send(botMessage(`Let's play random question session`));
+            fetch("http://jservice.io/api/random?count=1")
+                .then(res => res.json())
+                .then(data => {
+                    session.setAnswer(data[0].answer);
+                    send(botMessage(`${data[0].question}?`));
+                })
+                .catch(function (err) {
+                    console.log(err);
+                    send(botMessage((BOT_FETCH_ERROR_MSG)));
+                    return;
+                });
+
+            return;
+        }
+        // /specific
+        if (isEqual(input, BOT_CMD_MODE_SPECIFIC)) {
+            gameStatus.setGameMode(2);
+            session.startQuestionSession();
+            session.setQuestionId(session.getRandomCategoryId());
+            fetch(`http://jservice.io/api/category?id=${session.getQuestionId()}`)
+                .then(res => res.json())
+                .then(data => {
+                    session.setSpecificQuestion(data);
+                    let title = session.getSpecificQuestion().title;
+                    return title;
+                }).then(title => {
+                    send(botMessage(`Let's play specific question session about <span class="topic-name">${title}</span>`));
+                    let clues = session.getSpecificQuestion().clues[Math.floor(Math.random() * session.getSpecificQuestion().clues.length)];
+                    session.setAnswer(clues.answer);
+                    send(botMessage(`${clues.question}?`));
+                })
+                .catch(err => {
+                    console.log(err);
+                    send(botMessage(BOT_FETCH_ERROR_MSG));
+                });
+            return;
+        }
+        if (isEqual(input, BOT_CMD_EXIT)) {
+            stopCurrentSession();
+            return;
+        }
+        send(botMessage(BOT_SELECT_MODE_MSG));
+        return;
+
+    }
+    //kalo questionSession udah dimulai, yang masuk sini udah pasti jawaban
+    if (session.getQuestionSession()) {
+        //mode random
+        if (gameStatus.currentGameMode() === 1) {
+            console.log(session.getAnswer());
+            if (isEqual(input, BOT_CMD_EXIT)) {
+                stopCurrentSession();
+                return;
+            }
+            if (isEqual(input, BOT_CMD_GIVEUP)) {
+                send(botMessage(`The answer was <span class="answer">${session.getAnswer()}</span> ! Better luck next time.`));
                 fetch("http://jservice.io/api/random?count=1")
                     .then(res => res.json())
                     .then(data => {
+                        session.setAnswer(data[0].answer);
                         send(botMessage(`${data[0].question}?`));
                     })
                     .catch(function (err) {
@@ -226,39 +231,82 @@ function handleUserInput(input) {
                     });
                 return;
             }
-            // /specific
+            if (isEqual(input, BOT_CMD_HELP)) {
+                send(botMessage(BOT_HELP_MSG));
+                return;
+            }
             if (isEqual(input, BOT_CMD_MODE_SPECIFIC)) {
-                gameStatus.setGameMode(2);
-                session.startQuestionSession();
-                session.setQuestionId(session.getRandomCategoryId());
-                fetch(`http://jservice.io/api/category?id=${session.getQuestionId()}`)
+                send(botMessage(`Can't change session mode right now, Please exit first`));
+                return;
+            }
+            if (isEqual(input, BOT_CMD_START)) {
+                send(botMessage(`Can't start another session right now, Please exit first`));
+                return;
+            }
+            if (isEqual(input, BOT_CMD_MODE_RANDOM)) {
+                send(botMessage(`Already on random mode`));
+                return;
+            }
+            if (isAnswerCorrect(input, session.getAnswer())) {
+                send(botMessage(`Bingo! you got the answer right. Ready for another challenge ?`));
+                fetch("http://jservice.io/api/random?count=1")
                     .then(res => res.json())
                     .then(data => {
-                        session.setSpecificQuestion(data);
-                        let title = session.getSpecificQuestion().title;
-                        return title;
-                    }).then(title => {
-                        send(botMessage(`Let's play specific question session about <span class="topic-name">${title}</span>`));
-                        let clues = session.getSpecificQuestion().clues[Math.floor(Math.random() * session.getSpecificQuestion().clues.length)];
-                        send(botMessage(`${clues.question}?`));
+                        session.setAnswer(data[0].answer);
+                        send(botMessage(`${data[0].question}?`));
                     })
-                    .catch(err => {
+                    .catch(function (err) {
                         console.log(err);
-                        send(botMessage(BOT_FETCH_ERROR_MSG));
+                        send(botMessage((BOT_FETCH_ERROR_MSG)));
+                        return;
                     });
                 return;
             }
-            if (isEqual(input, BOT_CMD_EXIT)) {
-                gameStatus.resetGameMode();
-                gameStatus.stopGame();
-                send(botMessage(`Session stopped`));
-                return;
-            }
-            send(botMessage(BOT_SELECT_MODE_MSG));
+            send(botMessage(`Almost right!<br>..but almost right is still wrong though. Try again.`));
             return;
         }
+        //mode spesifik
+        if (gameStatus.currentGameMode() === 2) {
+            console.log(session.getAnswer());
+            if (isEqual(input, BOT_CMD_EXIT)) {
+                stopCurrentSession();
+                return;
+            }
+            if (isEqual(input, BOT_CMD_GIVEUP)) {
+                send(botMessage(`The answer was <span class="answer">${session.getAnswer()}</span> ! Better luck next time.`));
+                let clues = session.getSpecificQuestion().clues[Math.floor(Math.random() * session.getSpecificQuestion().clues.length)];
+                session.setAnswer(clues.answer);
+                send(botMessage(`${clues.question}?`));
+                return;
+            }
+            if (isEqual(input, BOT_CMD_HELP)) {
+                send(botMessage(BOT_HELP_MSG));
+                return;
+            }
+            if (isEqual(input, BOT_CMD_MODE_RANDOM)) {
+                send(botMessage(`Can't change session mode right now, Please exit first`));
+                return;
+            }
+            if (isEqual(input, BOT_CMD_START)) {
+                send(botMessage(`Can't start another session right now, Please exit first`));
+                return;
+            }
+            if (isEqual(input, BOT_CMD_MODE_SPECIFIC)) {
+                send(botMessage(`Already on specific question mode`));
+                return;
+            }
+            if (isAnswerCorrect(input, session.getAnswer())) {
+                send(botMessage(`Bingo! you got the answer right. Ready for another challenge ?`));
+                let clues = session.getSpecificQuestion().clues[Math.floor(Math.random() * session.getSpecificQuestion().clues.length)];
+                session.setAnswer(clues.answer);
+                send(botMessage(`${clues.question}?`));
+                return;
+            }
+            send(botMessage(`Almost right!<br>..but almost right is still wrong though. Try again.`));
+            return;
+        }
+
     }
-    //kalo questionSessio udah dimulai
 
 }
 
@@ -284,10 +332,11 @@ let session = (function () {
         136, 42, 21, 25, 103, 442, 114, 49, 530, 672, 78, 680, 99, 309, 218, 1079, 197, 2537
     ];
     let specificQuestion = {};
+    let answer = '';
 
 
     return {
-        currentQuestionSession: function () {
+        getQuestionSession: function () {
             return questionSession;
         },
         startQuestionSession: function () {
@@ -318,7 +367,17 @@ let session = (function () {
         resetSpecificQuestion: function (specificQuestionData) {
             specificQuestion = {};
             specificQuestion = specificQuestionData;
+        },
+        getAnswer: function () {
+            return answer;
+        },
+        setAnswer: function (_answer) {
+            answer = _answer;
+        },
+        resetAnswer: function () {
+            answer = '';
         }
+
     }
 
 })();
@@ -400,7 +459,6 @@ chatButton.addEventListener('click', function () {
     let message = chatBox.value;
     if (message !== "") {
         send(myMessage(message));
-        // send(botMessage(handleUserInput(message)));
         handleUserInput(message);
         chatBox.value = '';
     }

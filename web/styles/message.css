@@ -51,7 +51,8 @@
 
 }
 
-.topic-name {
+.topic-name,
+.answer {
     font-weight: bold;
     text-transform: uppercase;
 }
