@@ -212,7 +212,7 @@ function handleUserInput(input) {
             // /random
             if (isEqual(input, BOT_CMD_MODE_RANDOM)) {
                 gameStatus.setGameMode(1);
-                gameStatus.startQuestionSession();
+                session.startQuestionSession();
                 send(botMessage(`Let's play random question session`));
                 fetch("http://jservice.io/api/random?count=1")
                     .then(res => res.json())
@@ -229,17 +229,17 @@ function handleUserInput(input) {
             // /specific
             if (isEqual(input, BOT_CMD_MODE_SPECIFIC)) {
                 gameStatus.setGameMode(2);
-                gameStatus.startQuestionSession();
-                gameStatus.setQuestionId(gameStatus.getRandomCategoryId());
-                fetch(`http://jservice.io/api/category?id=${gameStatus.getQuestionId()}`)
+                session.startQuestionSession();
+                session.setQuestionId(session.getRandomCategoryId());
+                fetch(`http://jservice.io/api/category?id=${session.getQuestionId()}`)
                     .then(res => res.json())
                     .then(data => {
-                        gameStatus.setSpecificQuestion(data);
-                        let title = gameStatus.getSpecificQuestion().title;
+                        session.setSpecificQuestion(data);
+                        let title = session.getSpecificQuestion().title;
                         return title;
                     }).then(title => {
                         send(botMessage(`Let's play specific question session about <span class="topic-name">${title}</span>`));
-                        let clues = gameStatus.getSpecificQuestion().clues[Math.floor(Math.random() * gameStatus.getSpecificQuestion().clues.length)];
+                        let clues = session.getSpecificQuestion().clues[Math.floor(Math.random() * session.getSpecificQuestion().clues.length)];
                         send(botMessage(`${clues.question}?`));
                     })
                     .catch(err => {
@@ -258,6 +258,8 @@ function handleUserInput(input) {
             return;
         }
     }
+    //kalo questionSessio udah dimulai
+
 }
 
 
@@ -274,9 +276,8 @@ let sticker = (function () {
     };
 })();
 
-let gameStatus = (function () {
-    let gameStarted = false;
-    let gameMode = UNDEFINED;
+let session = (function () {
+
     let questionSession = false;
     let questionId = UNDEFINED;
     const popularCategoryId = [ //dari jService.io/popular
@@ -284,26 +285,8 @@ let gameStatus = (function () {
     ];
     let specificQuestion = {};
 
-    return {
 
-        isGameStarted: function () {
-            return gameStarted;
-        },
-        startGame: function () {
-            gameStarted = true;
-        },
-        stopGame: function () {
-            gameStarted = false;
-        },
-        currentGameMode: function () {
-            return gameMode;
-        },
-        setGameMode(gameModeInt) {
-            gameMode = gameModeInt;
-        },
-        resetGameMode() {
-            gameMode = UNDEFINED;
-        },
+    return {
         currentQuestionSession: function () {
             return questionSession;
         },
@@ -336,7 +319,36 @@ let gameStatus = (function () {
             specificQuestion = {};
             specificQuestion = specificQuestionData;
         }
+    }
 
+})();
+
+
+let gameStatus = (function () {
+    let gameStarted = false;
+    let gameMode = UNDEFINED;
+
+
+    return {
+
+        isGameStarted: function () {
+            return gameStarted;
+        },
+        startGame: function () {
+            gameStarted = true;
+        },
+        stopGame: function () {
+            gameStarted = false;
+        },
+        currentGameMode: function () {
+            return gameMode;
+        },
+        setGameMode(gameModeInt) {
+            gameMode = gameModeInt;
+        },
+        resetGameMode() {
+            gameMode = UNDEFINED;
+        }
     };
 })();
 
