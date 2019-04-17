@@ -13,9 +13,6 @@ const newline = document.createElement('br');
 // Const and global variables
 const NUM_STICKERS = 11;
 const UNDEFINED = -999;
-const popularCategoryId = [ //dari jService.io/popular
-    136, 42, 21, 25, 103, 442, 114, 49, 530, 672, 78, 680, 99, 309, 218, 1079, 197, 2537
-];
 const BOT_NAME = "Asti";
 
 const BOT_CMD_START = "/start";
@@ -26,19 +23,11 @@ const BOT_CMD_GIVEUP = "/giveup";
 const BOT_CMD_EXIT = "/exit";
 
 
+const BOT_START_FIRST_MSG = `Please start the session first.`;
 const BOT_ERROR_MSG = `ERROR`;
-const BOT_FETCH_ERROR_MSG = `
-    <span style="background:inherit;">
-        Sorry there was a mistake when loading your questions. please try again in a few moments.
-    </span>
-`;
-const BOT_GREETINGS_MSG = `
-    <span style="background:inherit;">
-        Hello, i'm ${BOT_NAME}.
-    </span>
-`;
+const BOT_FETCH_ERROR_MSG = `Sorry there was a mistake when loading your questions. please try again in a few moments.`;
+const BOT_GREETINGS_MSG = `Hello, i'm ${BOT_NAME}.`;
 const BOT_HELP_MSG = ` 
-    <span style="background:inherit;">
         Please type: <br>
         <span class = "command" >${BOT_CMD_START}</span > to start the game<br>
         <span class = "command" >${BOT_CMD_HELP}</span > to show help<br>
@@ -46,13 +35,10 @@ const BOT_HELP_MSG = `
         <span class = "command" >${BOT_CMD_MODE_SPECIFIC}</span > to set question mode to specific<br>
         <span class = "command" >${BOT_CMD_GIVEUP}</span > to giveup the current question<br>
         <span class = "command" >${BOT_CMD_EXIT}</span > to exit current session<br>
-    </span>  
     `;
 const BOT_SELECT_MODE_MSG = `
-    <span style="background:inherit;">
             1. Type <span class="command">${BOT_CMD_MODE_RANDOM}</span> to answer random question with different categories <br><br>
             2. Type <span class="command"> ${BOT_CMD_MODE_SPECIFIC} </span> to answer random question with same category
-    </span>
 `;
 
 
@@ -81,7 +67,7 @@ function myMessage(message) {
 
 function botSticker() {
     let chat = document.createElement("span");
-    chat.classList.add('message', 'bot-message', 'chat', 'bot-sticker-wrapper');
+    chat.classList.add('message', 'bot-message', 'chat');
     chat.innerHTML = `
         <span class="bot-blockchat-name">${BOT_NAME}</span><br>
     `;
@@ -97,10 +83,13 @@ function botSticker() {
 function botMessage(message) {
 
     let chat = document.createElement("span");
-    chat.classList.add('message', 'bot-message', 'chat');
-    chat.innerHTML = `
-        <span class="bot-blockchat-name">${BOT_NAME}</span><br>${message}
-    `;
+    setTimeout(function () {
+        chat.classList.add('message', 'bot-message', 'chat');
+        chat.innerHTML = `
+            <span class="bot-blockchat-name">${BOT_NAME}</span><br>${message}
+        `;
+        chatContent.scrollTop = chatContent.scrollHeight; //
+    }, 300);
     return chat;
 }
 
@@ -136,6 +125,10 @@ function processSticker() {
 function isUndefined(item) {
     return (item === UNDEFINED);
 }
+
+function isEqual(item1, item2) {
+    return (item1 === item2);
+}
 // function playRandomMode(userAnswer) {
 //     let question = '';
 //     let answer = '';
@@ -169,12 +162,104 @@ function isUndefined(item) {
 //         });
 // }
 
+function getRandomQuestionData() {
+    fetch("http://jservice.io/api/random?1")
+        .then(res => res.json())
+        .then(data => data)
+        .catch(function (err) {
+            console.log(err);
+            send(botMessage((BOT_FETCH_ERROR_MSG)));
+            return;
+        });
+}
 
+function getSpecificQuestionData(id) {
+    fetch(`http://jservice.io/api/category?id=${id}`)
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            return data;
+        })
+        .catch(err => {
+            console.log(err);
+            send(botMessage(BOT_FETCH_ERROR_MSG));
+        });
+}
 
-let isGameStarted = false;
-let gameMode = 0;
+function handleUserInput(input) {
+    //jika game belum di /start
+    if (!gameStatus.isGameStarted()) {
+        if (isEqual(input, BOT_CMD_START)) {
+            gameStatus.startGame();
+            send(botMessage(BOT_SELECT_MODE_MSG));
+            return;
+        }
+        if (isEqual(input, BOT_CMD_HELP)) {
+            send(botMessage(BOT_HELP_MSG));
+            return;
+        }
+        if (isEqual(input, BOT_CMD_EXIT) || isEqual(input, BOT_CMD_GIVEUP) || isEqual(BOT_CMD_MODE_RANDOM) || isEqual(BOT_CMD_MODE_SPECIFIC)) {
+            send(botMessage(BOT_START_FIRST_MSG));
+            return;
+        }
+        send(botMessage(BOT_HELP_MSG));
+        return;
 
-let questionId = -1;
+    }
+    //kalo belum milih game mode
+    if (gameStatus.isGameStarted()) {
+        if (isUndefined(gameStatus.currentGameMode())) {
+            // /random
+            if (isEqual(input, BOT_CMD_MODE_RANDOM)) {
+                gameStatus.setGameMode(1);
+                gameStatus.startQuestionSession();
+                send(botMessage(`Let's play random question session`));
+                fetch("http://jservice.io/api/random?count=1")
+                    .then(res => res.json())
+                    .then(data => {
+                        send(botMessage(`${data[0].question}?`));
+                    })
+                    .catch(function (err) {
+                        console.log(err);
+                        send(botMessage((BOT_FETCH_ERROR_MSG)));
+                        return;
+                    });
+                return;
+            }
+            // /specific
+            if (isEqual(input, BOT_CMD_MODE_SPECIFIC)) {
+                gameStatus.setGameMode(2);
+                gameStatus.startQuestionSession();
+                gameStatus.setQuestionId(gameStatus.getRandomCategoryId());
+                fetch(`http://jservice.io/api/category?id=${gameStatus.getQuestionId()}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        gameStatus.setSpecificQuestion(data);
+                        let title = gameStatus.getSpecificQuestion().title;
+                        return title;
+                    }).then(title => {
+                        send(botMessage(`Let's play specific question session about <span class="topic-name">${title}</span>`));
+                        let clues = gameStatus.getSpecificQuestion().clues[Math.floor(Math.random() * gameStatus.getSpecificQuestion().clues.length)];
+                        send(botMessage(`${clues.question}?`));
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        send(botMessage(BOT_FETCH_ERROR_MSG));
+                    });
+                return;
+            }
+            if (isEqual(input, BOT_CMD_EXIT)) {
+                gameStatus.resetGameMode();
+                gameStatus.stopGame();
+                send(botMessage(`Session stopped`));
+                return;
+            }
+            send(botMessage(BOT_SELECT_MODE_MSG));
+            return;
+        }
+    }
+}
+
 
 
 let sticker = (function () {
@@ -194,6 +279,10 @@ let gameStatus = (function () {
     let gameMode = UNDEFINED;
     let questionSession = false;
     let questionId = UNDEFINED;
+    const popularCategoryId = [ //dari jService.io/popular
+        136, 42, 21, 25, 103, 442, 114, 49, 530, 672, 78, 680, 99, 309, 218, 1079, 197, 2537
+    ];
+    let specificQuestion = {};
 
     return {
 
@@ -227,11 +316,43 @@ let gameStatus = (function () {
         getQuestionId: function () {
             return questionId;
         },
-        setquestionId: function (questionIdInt) {
+        setQuestionId: function (questionIdInt) {
             questionId = questionIdInt;
         },
         resetquestionId: function () {
             questionId = UNDEFINED;
+        },
+        getRandomCategoryId: function () {
+            return popularCategoryId[Math.floor(Math.random() * popularCategoryId.length)];
+        },
+        setSpecificQuestion: function (specificQuestionData) {
+            specificQuestion = {};
+            specificQuestion = specificQuestionData;
+        },
+        getSpecificQuestion: function () {
+            return specificQuestion;
+        },
+        resetSpecificQuestion: function (specificQuestionData) {
+            specificQuestion = {};
+            specificQuestion = specificQuestionData;
+        }
+
+    };
+})();
+
+let score = (function () {
+    let scr = 0;
+
+    return {
+
+        getScore: function () {
+            return scr;
+        },
+        add: function (points) {
+            scr += points;
+        },
+        reset: function () {
+            scr = 0;
         }
     };
 })();
@@ -266,10 +387,9 @@ stickerButton.addEventListener('click', function () {
 chatButton.addEventListener('click', function () {
     let message = chatBox.value;
     if (message !== "") {
-        // processChat(message, BOT_ERROR_MSG);
-
-
-
+        send(myMessage(message));
+        // send(botMessage(handleUserInput(message)));
+        handleUserInput(message);
         chatBox.value = '';
     }
 });
