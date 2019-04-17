@@ -13,18 +13,48 @@
     font-family: 'Roboto', sans-serif;
 }
 
+
 #chat-container-navbar {
     border-radius: 6px 6px 0 0;
     background: #128c7e;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     z-index: 100;
+}
+
+#profile {
+    background: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#circles {
+    margin-right: 1em;
+    background: inherit;
+}
+
+#circles .c3 {
+    color: tomato;
+    background: inherit;
+}
+
+#circles .c2 {
+    color: #dcf8c6;
+    background: inherit;
+}
+
+#circles .c1 {
+    color: dodgerblue;
+    background: inherit;
 }
 
 #profile-name {
     background: none;
     color: white;
     letter-spacing: .1rem;
+    font-weight: bold;
 }
 
 #chat-content {

@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400|Roboto" rel="stylesheet">
     <link rel="stylesheet" href="styles/main.css ">
-    <link rel="stylesheet" href="styles/avatar.css ">
     <link rel="stylesheet" href="styles/chatbox.css ">
     <link rel="stylesheet" href="styles/message.css ">
     <link rel="stylesheet" href="styles/bot.css ">
@@ -28,8 +27,15 @@
 
     <div id="chat-container" class="animated bounceIn">
         <div id="chat-container-navbar">
-            <img src="assets/header.png" alt="avatar" class="bot-picture">
-            <span id="profile-name">Asti</span>
+            <span id="profile">
+                <img src="assets/header.png" alt="avatar" class="bot-picture">
+                <span id="profile-name">Asti</span>
+            </span>
+            <span id="circles">
+                <i class="fas fa-circle c1"></i>
+                <i class="fas fa-circle c2"></i>
+                <i class="fas fa-circle c3"></i>
+            </span>
         </div>
 
         <div id="chat-content"></div>
