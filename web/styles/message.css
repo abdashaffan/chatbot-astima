@@ -11,6 +11,10 @@
     z-index: 1;
 }
 
+.message * {
+    background: inherit;
+}
+
 .my-message {
     margin-right: 1rem;
     border-radius: 20px 20px 0 20px;
@@ -22,7 +26,6 @@
 .bot-blockchat-name {
     font-weight: bold;
     color: tomato;
-    background: inherit;
 }
 
 .bot-message {
@@ -36,16 +39,19 @@
 .sticker {
     margin: 15px;
     position: relative;
-    background: transparent;
     height: 100px;
     width: auto;
 }
 
 .command {
-    /* font-family: Arial, Helvetica, sans-serif; */
     font-family: monospace;
     font-weight: bold;
     font-size: 1.2em;
     color: #128c7e;
-    background: inherit;
+
+}
+
+.topic-name {
+    font-weight: bold;
+    text-transform: uppercase;
 }
