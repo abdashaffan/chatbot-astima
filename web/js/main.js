@@ -432,6 +432,8 @@ chatWindow.addEventListener('animationend', function () {
     setTimeout(function () {
         judul.classList.add('animated', 'fadeIn');
         judul.classList.remove('hidden');
+        document.getElementById('footer').classList.add('animated', 'fadeIn');
+        document.getElementById('footer').classList.remove('hidden');
     }, 750);
 })
 judul.addEventListener('animationend', function () {

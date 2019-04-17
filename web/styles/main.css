@@ -9,8 +9,7 @@ body {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    /* justify-content: center; */
-    /* align-items: center; */
+    font-size: 100%;
 }
 
 #title {
@@ -36,7 +35,7 @@ body {
 }
 
 #footer {
-    margin: 0 auto;
+    margin: 1em auto;
     padding: 1.2em;
     text-align: center;
     font-family: 'Roboto', sans-serif;
