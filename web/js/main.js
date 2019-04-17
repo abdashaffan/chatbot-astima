@@ -12,6 +12,10 @@ const newline = document.createElement('br');
 
 // Const and global variables
 const NUM_STICKERS = 11;
+const UNDEFINED = -999;
+const popularCategoryId = [ //dari jService.io/popular
+    136, 42, 21, 25, 103, 442, 114, 49, 530, 672, 78, 680, 99, 309, 218, 1079, 197, 2537
+];
 const BOT_NAME = "Asti";
 
 const BOT_CMD_START = "/start";
@@ -91,6 +95,7 @@ function botSticker() {
 }
 
 function botMessage(message) {
+
     let chat = document.createElement("span");
     chat.classList.add('message', 'bot-message', 'chat');
     chat.innerHTML = `
@@ -105,15 +110,15 @@ function send(chatNode) {
 }
 
 
-function processChat(myChat, botChat) {
-    let myBlockChat = myMessage(myChat);
-    send(myBlockChat);
-    setTimeout(function () {
-        let botResponse = botMessage(botChat);
-        send(botResponse);
-        chatBox.focus();
-    }, 500);
-}
+// function processChat(myChat, botChat) {
+//     let myBlockChat = myMessage(myChat);
+//     send(myBlockChat);
+//     setTimeout(function () {
+//         let botResponse = botMessage(botChat);
+//         send(botResponse);
+//         chatBox.focus();
+//     }, 500);
+// }
 
 function processSticker() {
     let myStickerChat = mySticker();
@@ -122,12 +127,15 @@ function processSticker() {
         let botStickerChat = botSticker();
         send(botStickerChat);
         setTimeout(function () {
-            stickerBtnClickable = true;
+            sticker.toggle();
             chatBox.focus();
         }, 200);
     }, 500);
 }
 
+function isUndefined(item) {
+    return (item === UNDEFINED);
+}
 // function playRandomMode(userAnswer) {
 //     let question = '';
 //     let answer = '';
@@ -165,12 +173,68 @@ function processSticker() {
 
 let isGameStarted = false;
 let gameMode = 0;
-let stickerBtnClickable = true;
-let popularCategoryId = [ //dari jService.io/popular
-    136, 42, 21, 25, 103, 442, 114, 49, 530, 672, 78, 680, 99, 309, 218, 1079, 197, 2537
-];
+
 let questionId = -1;
 
+
+let sticker = (function () {
+    let stickerBtnClickable = false;
+    return {
+        toggle: function () {
+            stickerBtnClickable = !stickerBtnClickable;
+        },
+        clickable: function () {
+            return stickerBtnClickable;
+        }
+    };
+})();
+
+let gameStatus = (function () {
+    let gameStarted = false;
+    let gameMode = UNDEFINED;
+    let questionSession = false;
+    let questionId = UNDEFINED;
+
+    return {
+
+        isGameStarted: function () {
+            return gameStarted;
+        },
+        startGame: function () {
+            gameStarted = true;
+        },
+        stopGame: function () {
+            gameStarted = false;
+        },
+        currentGameMode: function () {
+            return gameMode;
+        },
+        setGameMode(gameModeInt) {
+            gameMode = gameModeInt;
+        },
+        resetGameMode() {
+            gameMode = UNDEFINED;
+        },
+        currentQuestionSession: function () {
+            return questionSession;
+        },
+        startQuestionSession: function () {
+            questionSession = true;
+        },
+        stopQuestionSession: function () {
+            questionSession = false;
+        },
+        getQuestionId: function () {
+            return questionId;
+        },
+        setquestionId: function (questionIdInt) {
+            questionId = questionIdInt;
+        },
+        resetquestionId: function () {
+            questionId = UNDEFINED;
+        }
+    };
+})();
 
 chatWindow.addEventListener('animationend', function () {
     setTimeout(function () {
@@ -179,30 +243,33 @@ chatWindow.addEventListener('animationend', function () {
     }, 750);
 })
 judul.addEventListener('animationend', function () {
-    // setTimeout(function () {
-    let botGreetings = botMessage(BOT_GREETINGS_MSG);
-    let botHelp = botMessage(BOT_HELP_MSG);
-    send(botGreetings);
     setTimeout(function () {
-        console.log('yo');
-        send(botHelp);
-    }, 500);
-    chatBox.focus();
-    // }, 300);
+        let botGreetings = botMessage(BOT_GREETINGS_MSG);
+        let botHelp = botMessage(BOT_HELP_MSG);
+        send(botGreetings);
+        setTimeout(function () {
+            send(botHelp);
+            sticker.toggle();
+        }, 500);
+        chatBox.focus();
+    }, 300);
 });
 input.addEventListener('click', function () {
     chatBox.focus();
 });
 stickerButton.addEventListener('click', function () {
-    if (stickerBtnClickable) {
-        stickerBtnClickable = false;
+    if (sticker.clickable()) {
+        sticker.toggle();
         processSticker();
     }
 });
 chatButton.addEventListener('click', function () {
     let message = chatBox.value;
     if (message !== "") {
-        processChat(message, BOT_ERROR_MSG);
+        // processChat(message, BOT_ERROR_MSG);
+
+
+
         chatBox.value = '';
     }
 });
