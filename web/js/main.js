@@ -162,11 +162,11 @@ function handleUserInput(input) {
             session.startQuestionSession();
 
             send(botMessage(`Let's play random question session`));
-            fetch("http://jservice.io/api/random?count=1")
+            fetch("https://opentdb.com/api.php?amount=1&type=boolean")
                 .then(res => res.json())
                 .then(data => {
-                    session.setAnswer(data[0].answer);
-                    send(botMessage(`${data[0].question}?`));
+                    session.setAnswer(data.results[0].correct_answer);
+                    send(botMessage(`${data.results[0].question}?`));
                 })
                 .catch(function (err) {
                     console.log(err);
@@ -217,11 +217,11 @@ function handleUserInput(input) {
             }
             if (isEqual(input, BOT_CMD_GIVEUP)) {
                 send(botMessage(`The answer was <span class="answer">${session.getAnswer()}</span> ! Better luck next time.`));
-                fetch("http://jservice.io/api/random?count=1")
+                fetch("https://opentdb.com/api.php?amount=1&type=boolean")
                     .then(res => res.json())
                     .then(data => {
-                        session.setAnswer(data[0].answer);
-                        send(botMessage(`${data[0].question}?`));
+                        session.setAnswer(data.results[0].correct_answer);
+                        send(botMessage(`${data.results[0].question}?`));
                     })
                     .catch(function (err) {
                         console.log(err);
@@ -248,11 +248,11 @@ function handleUserInput(input) {
             }
             if (isAnswerCorrect(input, session.getAnswer())) {
                 send(botMessage(`Bingo! you got the answer right. Ready for another challenge ?`));
-                fetch("http://jservice.io/api/random?count=1")
+                fetch("https://opentdb.com/api.php?amount=1&type=boolean")
                     .then(res => res.json())
                     .then(data => {
-                        session.setAnswer(data[0].answer);
-                        send(botMessage(`${data[0].question}?`));
+                        session.setAnswer(data.results[0].correct_answer);
+                        send(botMessage(`${data.results[0].question}?`));
                     })
                     .catch(function (err) {
                         console.log(err);
@@ -327,9 +327,6 @@ let session = (function () {
 
     let questionSession = false;
     let questionId = UNDEFINED;
-    const popularCategoryId = [ //dari jService.io/popular
-        136, 42, 21, 25, 103, 442, 114, 49, 530, 672, 78, 680, 99, 309, 218, 1079, 197, 2537
-    ];
     let specificQuestion = {};
     let answer = '';
 
@@ -354,7 +351,7 @@ let session = (function () {
             questionId = UNDEFINED;
         },
         getRandomCategoryId: function () {
-            return popularCategoryId[Math.floor(Math.random() * popularCategoryId.length)];
+            return Math.floor(Math.random() * 32) + 9;
         },
         setSpecificQuestion: function (specificQuestionData) {
             specificQuestion = {};
