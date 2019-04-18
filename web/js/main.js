@@ -50,7 +50,7 @@ function mySticker() {
     chat.classList.add('message', 'my-message', 'chat');
     let sticker = document.createElement('img');
     let num = Math.floor((Math.random() * NUM_STICKERS) + 1);
-    let src = `../web/assets/stickers/${num}.png`;
+    let src = `assets/stickers/${num}.png`;
     sticker.setAttribute('src', src);
     sticker.classList.add('sticker', 'my-sticker');
     chat.appendChild(sticker);
@@ -73,7 +73,7 @@ function botSticker() {
     `;
     let sticker = document.createElement('img');
     let num = Math.floor((Math.random() * NUM_STICKERS) + 1);
-    let src = `../web/assets/stickers/${num}.png`;
+    let src = `assets/stickers/${num}.png`;
     sticker.setAttribute('src', src);
     sticker.classList.add('sticker', 'bot-sticker');
     chat.appendChild(sticker);
