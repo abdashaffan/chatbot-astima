@@ -211,7 +211,6 @@ function handleUserInput(input) {
     if (session.getQuestionSession()) {
         //mode random
         if (gameStatus.currentGameMode() === 1) {
-            console.log(session.getAnswer());
             if (isEqual(input, BOT_CMD_EXIT)) {
                 stopCurrentSession();
                 return;
@@ -267,7 +266,7 @@ function handleUserInput(input) {
         }
         //mode spesifik
         if (gameStatus.currentGameMode() === 2) {
-            console.log(session.getAnswer());
+
             if (isEqual(input, BOT_CMD_EXIT)) {
                 stopCurrentSession();
                 return;
