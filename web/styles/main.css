@@ -5,11 +5,10 @@
     background: lightyellow;
 }
 
-body {
+html {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    font-size: 100%;
 }
 
 #title {

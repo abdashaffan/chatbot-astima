@@ -35,8 +35,9 @@
     background: inherit;
 }
 
-#circles .c3 {
-    color: tomato;
+
+#circles .c1 {
+    color: lightgreen;
     background: inherit;
 }
 
@@ -45,8 +46,8 @@
     background: inherit;
 }
 
-#circles .c1 {
-    color: dodgerblue;
+#circles .c3 {
+    color: tomato;
     background: inherit;
 }
 
@@ -103,18 +104,22 @@
 }
 
 #footer {
-    margin: 1em auto;
+    /* margin: 1em auto; */
     padding: 1.2em;
     text-align: center;
     font-family: 'Montserrat', sans-serif;
     font-size: 1em;
     color: #128c7e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #jservice {
     font-family: inherit;
     text-decoration: none;
     color: rgba(51, 51, 51, 0.7);
+    margin: 0 0.5rem;
 }
 
 #jservice:hover {
@@ -128,4 +133,5 @@
 #github-link {
     text-decoration: none;
     color: #128c7e;
+    margin: 0 0.5rem;
 }
