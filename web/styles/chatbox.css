@@ -115,14 +115,14 @@
     justify-content: center;
 }
 
-#jservice {
+#api {
     font-family: inherit;
     text-decoration: none;
     color: rgba(51, 51, 51, 0.7);
     margin: 0 0.5rem;
 }
 
-#jservice:hover {
+#api:hover {
     opacity: 1;
 }
 

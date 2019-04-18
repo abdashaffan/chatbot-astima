@@ -19,7 +19,6 @@ const BOT_CMD_START = "/start";
 const BOT_CMD_HELP = "/help";
 const BOT_CMD_MODE_RANDOM = "/random";
 const BOT_CMD_MODE_SPECIFIC = "/specific";
-const BOT_CMD_GIVEUP = "/giveup";
 const BOT_CMD_EXIT = "/exit";
 
 
@@ -33,7 +32,6 @@ const BOT_HELP_MSG = `
         <span class = "command" >${BOT_CMD_HELP}</span > to show help<br>
         <span class = "command" >${BOT_CMD_MODE_RANDOM}</span > to set question mode to random<br>
         <span class = "command" >${BOT_CMD_MODE_SPECIFIC}</span > to set question mode to specific<br>
-        <span class = "command" >${BOT_CMD_GIVEUP}</span > to giveup the current question<br>
         <span class = "command" >${BOT_CMD_EXIT}</span > to exit current session<br>
     `;
 const BOT_SELECT_MODE_MSG = `
@@ -125,12 +123,38 @@ function isAnswerCorrect(input, answer) {
 
 function stopCurrentSession() {
     session.resetAnswer();
-    session.resetSpecificQuestion();
     session.resetquestionId();
     gameStatus.resetGameMode();
     gameStatus.stopGame();
     session.stopQuestionSession();
     send(botMessage(`Session stopped`));
+}
+
+function getRandomQuestion() {
+    fetch("https://opentdb.com/api.php?amount=1&type=boolean")
+        .then(res => res.json())
+        .then(data => {
+            session.setAnswer(data.results[0].correct_answer);
+            send(botMessage(data.results[0].question));
+        })
+        .catch(function (err) {
+            console.log(err);
+            send(botMessage((BOT_FETCH_ERROR_MSG)));
+            return;
+        });
+}
+
+function getSpecificQuestion(questionId) {
+    fetch(`https://opentdb.com/api.php?amount=1&category=${questionId}&type=boolean`)
+        .then(res => res.json())
+        .then(json => {
+            session.setAnswer(json.results[0].correct_answer);
+            send(botMessage(json.results[0].question));
+        })
+        .catch(err => {
+            console.log(err);
+            send(botMessage(BOT_FETCH_ERROR_MSG));
+        });
 }
 
 function handleUserInput(input) {
@@ -145,7 +169,7 @@ function handleUserInput(input) {
             send(botMessage(BOT_HELP_MSG));
             return;
         }
-        if (isEqual(input, BOT_CMD_EXIT) || isEqual(input, BOT_CMD_GIVEUP) || isEqual(BOT_CMD_MODE_RANDOM) || isEqual(BOT_CMD_MODE_SPECIFIC)) {
+        if (isEqual(input, BOT_CMD_EXIT) || isEqual(BOT_CMD_MODE_RANDOM) || isEqual(BOT_CMD_MODE_SPECIFIC)) {
             send(botMessage(BOT_START_FIRST_MSG));
             return;
         }
@@ -162,17 +186,8 @@ function handleUserInput(input) {
             session.startQuestionSession();
 
             send(botMessage(`Let's play random question session`));
-            fetch("https://opentdb.com/api.php?amount=1&type=boolean")
-                .then(res => res.json())
-                .then(data => {
-                    session.setAnswer(data.results[0].correct_answer);
-                    send(botMessage(`${data.results[0].question}?`));
-                })
-                .catch(function (err) {
-                    console.log(err);
-                    send(botMessage((BOT_FETCH_ERROR_MSG)));
-                    return;
-                });
+            send(botMessage(`Please answer with <span class="command">TRUE</span> or <span class="command">FALSE</span>`));
+            getRandomQuestion();
 
             return;
         }
@@ -180,23 +195,13 @@ function handleUserInput(input) {
         if (isEqual(input, BOT_CMD_MODE_SPECIFIC)) {
             gameStatus.setGameMode(2);
             session.startQuestionSession();
-            session.setQuestionId(session.getRandomCategoryId());
-            fetch(`http://jservice.io/api/category?id=${session.getQuestionId()}`)
-                .then(res => res.json())
-                .then(data => {
-                    session.setSpecificQuestion(data);
-                    let title = session.getSpecificQuestion().title;
-                    return title;
-                }).then(title => {
-                    send(botMessage(`Let's play specific question session about <span class="topic-name">${title}</span>`));
-                    let clues = session.getSpecificQuestion().clues[Math.floor(Math.random() * session.getSpecificQuestion().clues.length)];
-                    session.setAnswer(clues.answer);
-                    send(botMessage(`${clues.question}?`));
-                })
-                .catch(err => {
-                    console.log(err);
-                    send(botMessage(BOT_FETCH_ERROR_MSG));
-                });
+            let category = session.getRandomCategory()
+            let questionId = category.id;
+            session.setQuestionId(questionId);
+            let questionCategory = category.name;
+            send(botMessage(`Let's play specific question session about <span class="topic-name">${questionCategory}</span>`));
+            send(botMessage(`Please answer with <span class="command">TRUE</span> or <span class="command">FALSE</span>`));
+            getSpecificQuestion(questionId);
             return;
         }
         if (isEqual(input, BOT_CMD_EXIT)) {
@@ -213,21 +218,6 @@ function handleUserInput(input) {
         if (gameStatus.currentGameMode() === 1) {
             if (isEqual(input, BOT_CMD_EXIT)) {
                 stopCurrentSession();
-                return;
-            }
-            if (isEqual(input, BOT_CMD_GIVEUP)) {
-                send(botMessage(`The answer was <span class="answer">${session.getAnswer()}</span> ! Better luck next time.`));
-                fetch("https://opentdb.com/api.php?amount=1&type=boolean")
-                    .then(res => res.json())
-                    .then(data => {
-                        session.setAnswer(data.results[0].correct_answer);
-                        send(botMessage(`${data.results[0].question}?`));
-                    })
-                    .catch(function (err) {
-                        console.log(err);
-                        send(botMessage((BOT_FETCH_ERROR_MSG)));
-                        return;
-                    });
                 return;
             }
             if (isEqual(input, BOT_CMD_HELP)) {
@@ -248,20 +238,12 @@ function handleUserInput(input) {
             }
             if (isAnswerCorrect(input, session.getAnswer())) {
                 send(botMessage(`Bingo! you got the answer right. Ready for another challenge ?`));
-                fetch("https://opentdb.com/api.php?amount=1&type=boolean")
-                    .then(res => res.json())
-                    .then(data => {
-                        session.setAnswer(data.results[0].correct_answer);
-                        send(botMessage(`${data.results[0].question}?`));
-                    })
-                    .catch(function (err) {
-                        console.log(err);
-                        send(botMessage((BOT_FETCH_ERROR_MSG)));
-                        return;
-                    });
+                getRandomQuestion();
                 return;
             }
-            send(botMessage(`Almost right!<br>..but almost right is still wrong though. Try again.`));
+            send(botMessage(`Wrong!`));
+            send(botMessage(`The answer was <span class="answer">${session.getAnswer()}</span> ! Better luck next time.`));
+            getRandomQuestion();
             return;
         }
         //mode spesifik
@@ -269,13 +251,6 @@ function handleUserInput(input) {
 
             if (isEqual(input, BOT_CMD_EXIT)) {
                 stopCurrentSession();
-                return;
-            }
-            if (isEqual(input, BOT_CMD_GIVEUP)) {
-                send(botMessage(`The answer was <span class="answer">${session.getAnswer()}</span> ! Better luck next time.`));
-                let clues = session.getSpecificQuestion().clues[Math.floor(Math.random() * session.getSpecificQuestion().clues.length)];
-                session.setAnswer(clues.answer);
-                send(botMessage(`${clues.question}?`));
                 return;
             }
             if (isEqual(input, BOT_CMD_HELP)) {
@@ -296,12 +271,12 @@ function handleUserInput(input) {
             }
             if (isAnswerCorrect(input, session.getAnswer())) {
                 send(botMessage(`Bingo! you got the answer right. Ready for another challenge ?`));
-                let clues = session.getSpecificQuestion().clues[Math.floor(Math.random() * session.getSpecificQuestion().clues.length)];
-                session.setAnswer(clues.answer);
-                send(botMessage(`${clues.question}?`));
+                getSpecificQuestion(session.getQuestionId());
                 return;
             }
-            send(botMessage(`Almost right!<br>..but almost right is still wrong though. Try again.`));
+            send(botMessage(`Wrong!`));
+            send(botMessage(`The answer was <span class="answer">${session.getAnswer()}</span> ! Better luck next time.`));
+            getSpecificQuestion(session.getQuestionId());
             return;
         }
 
@@ -327,10 +302,16 @@ let session = (function () {
 
     let questionSession = false;
     let questionId = UNDEFINED;
-    let specificQuestion = {};
+    let questionCategories = {};
+    fetch(`https://opentdb.com/api_category.php`)
+        .then(res => res.json())
+        .then(data => {
+            questionCategories = data.trivia_categories; //array of objects
+        })
+        .catch(err => {
+            console.log(err);
+        });
     let answer = '';
-
-
     return {
         getQuestionSession: function () {
             return questionSession;
@@ -350,19 +331,8 @@ let session = (function () {
         resetquestionId: function () {
             questionId = UNDEFINED;
         },
-        getRandomCategoryId: function () {
-            return Math.floor(Math.random() * 32) + 9;
-        },
-        setSpecificQuestion: function (specificQuestionData) {
-            specificQuestion = {};
-            specificQuestion = specificQuestionData;
-        },
-        getSpecificQuestion: function () {
-            return specificQuestion;
-        },
-        resetSpecificQuestion: function (specificQuestionData) {
-            specificQuestion = {};
-            specificQuestion = specificQuestionData;
+        getRandomCategory: function () {
+            return questionCategories[Math.floor(Math.random() * questionCategories.length)];
         },
         getAnswer: function () {
             return answer;
