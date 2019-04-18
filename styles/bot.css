@@ -1,0 +1,6 @@
+.bot-picture {
+    border-radius: 50%;
+    background: lightgoldenrodyellow;
+    margin: .75rem 1rem;
+    max-width: 35px;
+}

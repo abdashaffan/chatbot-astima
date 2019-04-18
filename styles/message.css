@@ -1,0 +1,58 @@
+.message {
+    position: relative;
+    margin: 1rem 0;
+    font-size: 1rem;
+    padding: .5rem;
+    /*word-break supaya chat gak keluar chatWindow kalo chatnya panjang*/
+    word-break: break-all;
+    max-width: 50%;
+    top: 300px;
+    display: block;
+    z-index: 1;
+}
+
+.message * {
+    background: inherit;
+}
+
+.my-message {
+    margin-right: 1rem;
+    border-radius: 20px 20px 0 20px;
+    background: rgb(250, 250, 250);
+    float: right;
+    clear: both;
+}
+
+.bot-blockchat-name {
+    font-weight: bold;
+    color: tomato;
+}
+
+.bot-message {
+    margin-left: 1rem;
+    border-radius: 20px 20px 20px 0;
+    background: #dcf8c6;
+    float: left;
+    clear: both;
+}
+
+.sticker {
+    margin: 15px;
+    position: relative;
+    height: 100px;
+    width: auto;
+}
+
+.command {
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #128c7e;
+
+}
+
+.topic-name,
+.answer {
+    font-weight: bold;
+    text-transform: uppercase;
+}

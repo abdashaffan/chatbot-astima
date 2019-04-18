@@ -1,0 +1,137 @@
+#chat-container {
+    background: url(../assets/wallpaper.png) center no-repeat;
+    background-size: cover;
+    height: 70vh;
+    width: 50vw;
+    margin: 1em auto;
+    position: relative;
+    margin: auto;
+    border-radius: 5px;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Roboto', sans-serif;
+}
+
+
+#chat-container-navbar {
+    border-radius: 6px 6px 0 0;
+    background: #128c7e;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+
+#profile {
+    background: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#circles {
+    margin-right: 1em;
+    background: inherit;
+}
+
+
+#circles .c1 {
+    color: lightgreen;
+    background: inherit;
+}
+
+#circles .c2 {
+    color: #dcf8c6;
+    background: inherit;
+}
+
+#circles .c3 {
+    color: tomato;
+    background: inherit;
+}
+
+#profile-name {
+    background: none;
+    color: white;
+    letter-spacing: .1rem;
+    font-weight: bold;
+}
+
+#chat-content {
+    flex: 1 1 auto;
+    background: transparent;
+    overflow: auto;
+    position: relative;
+}
+
+#chatform {
+    padding: 0;
+    width: 95%;
+    background: white;
+    padding: .5em 0;
+    border-radius: 6px;
+    margin: 1em auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    cursor: pointer;
+}
+
+#text-msg {
+    background: inherit;
+    width: 80%;
+    border: 0;
+    cursor: pointer;
+    outline: none;
+}
+
+#text-btn:hover {
+    color: #333;
+}
+
+.material-icons.md-dark {
+    color: rgba(0, 0, 0, 0.54);
+    background: inherit;
+}
+
+#sticker {
+    cursor: pointer;
+}
+
+#sticker:hover {
+    color: #333;
+}
+
+#footer {
+    /* margin: 1em auto; */
+    padding: 1.2em;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    color: #128c7e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#jservice {
+    font-family: inherit;
+    text-decoration: none;
+    color: rgba(51, 51, 51, 0.7);
+    margin: 0 0.5rem;
+}
+
+#jservice:hover {
+    opacity: 1;
+}
+
+.fa-github:hover {
+    opacity: 0.7;
+}
+
+#github-link {
+    text-decoration: none;
+    color: #128c7e;
+    margin: 0 0.5rem;
+}

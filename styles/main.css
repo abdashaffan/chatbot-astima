@@ -1,0 +1,34 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    background: lightyellow;
+}
+
+html {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+#title {
+    font-family: 'Montserrat', sans-serif;
+    color: #128c7e;
+    text-align: center;
+    margin: 0 1em;
+    padding: 1em;
+}
+
+.main-title {
+    font-size: 3em;
+    text-transform: uppercase;
+    letter-spacing: .7rem;
+}
+
+.sub-title {
+    font-weight: 300;
+}
+
+.hidden {
+    visibility: hidden;
+}
