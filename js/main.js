@@ -13,7 +13,7 @@ const newline = document.createElement('br');
 // Const and global variables
 const NUM_STICKERS = 11;
 const UNDEFINED = -999;
-const BOT_NAME = "Asti";
+const BOT_NAME = "Lyara";
 
 const BOT_CMD_START = "/start";
 const BOT_CMD_HELP = "/help";
