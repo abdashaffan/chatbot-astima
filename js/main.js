@@ -162,7 +162,7 @@ function handleUserInput(input) {
             session.startQuestionSession();
 
             send(botMessage(`Let's play random question session`));
-            fetch("https://jservice.io/api/random?count=1")
+            fetch("http://jservice.io/api/random?count=1")
                 .then(res => res.json())
                 .then(data => {
                     session.setAnswer(data[0].answer);
@@ -181,7 +181,7 @@ function handleUserInput(input) {
             gameStatus.setGameMode(2);
             session.startQuestionSession();
             session.setQuestionId(session.getRandomCategoryId());
-            fetch(`https://jservice.io/api/category?id=${session.getQuestionId()}`)
+            fetch(`http://jservice.io/api/category?id=${session.getQuestionId()}`)
                 .then(res => res.json())
                 .then(data => {
                     session.setSpecificQuestion(data);
@@ -217,7 +217,7 @@ function handleUserInput(input) {
             }
             if (isEqual(input, BOT_CMD_GIVEUP)) {
                 send(botMessage(`The answer was <span class="answer">${session.getAnswer()}</span> ! Better luck next time.`));
-                fetch("https://jservice.io/api/random?count=1")
+                fetch("http://jservice.io/api/random?count=1")
                     .then(res => res.json())
                     .then(data => {
                         session.setAnswer(data[0].answer);
@@ -248,7 +248,7 @@ function handleUserInput(input) {
             }
             if (isAnswerCorrect(input, session.getAnswer())) {
                 send(botMessage(`Bingo! you got the answer right. Ready for another challenge ?`));
-                fetch("https://jservice.io/api/random?count=1")
+                fetch("http://jservice.io/api/random?count=1")
                     .then(res => res.json())
                     .then(data => {
                         session.setAnswer(data[0].answer);
