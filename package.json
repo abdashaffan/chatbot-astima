@@ -1,0 +1,24 @@
+{
+  "name": "chatbot-astima",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "gh-pages -d web"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abdashaffan/chatbot-astima.git"
+  },
+  "keywords": [],
+  "author": "Abda Shaffan Diva",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abdashaffan/chatbot-astima/issues"
+  },
+  "homepage": "https://abdashaffan.github.io/chatbot-astima",
+  "dependencies": {
+    "gh-pages": "^2.0.1"
+  }
+}
