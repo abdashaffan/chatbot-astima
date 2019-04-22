@@ -9,6 +9,7 @@ const chatBox = document.getElementById("text-msg");
 const chatButton = document.getElementById("text-btn");
 const stickerButton = document.getElementById("sticker");
 const newline = document.createElement('br');
+let picture = document.getElementById("bot-picture");
 
 // Const and global variables
 const NUM_STICKERS = 11;
@@ -91,9 +92,13 @@ function botMessage(message) {
     return chat;
 }
 
-function send(chatNode) {
+function send(chatNode, bot = false) {
     chatContent.appendChild(chatNode);
     chatContent.scrollTop = chatContent.scrollHeight;
+    if (bot) {
+        animateProfile(1);
+        animateProfile(1);
+    }
 }
 
 function processSticker() {
@@ -101,7 +106,7 @@ function processSticker() {
     send(myStickerChat);
     setTimeout(function () {
         let botStickerChat = botSticker();
-        send(botStickerChat);
+        send(botStickerChat, true);
         setTimeout(function () {
             sticker.toggle();
             chatBox.focus();
@@ -127,7 +132,7 @@ function stopCurrentSession() {
     gameStatus.resetGameMode();
     gameStatus.stopGame();
     session.stopQuestionSession();
-    send(botMessage(`Session stopped`));
+    send(botMessage(`Session stopped`), true);
 }
 
 function getRandomQuestion() {
@@ -135,11 +140,11 @@ function getRandomQuestion() {
         .then(res => res.json())
         .then(data => {
             session.setAnswer(data.results[0].correct_answer);
-            send(botMessage(data.results[0].question));
+            send(botMessage(data.results[0].question), true);
         })
         .catch(function (err) {
             console.log(err);
-            send(botMessage((BOT_FETCH_ERROR_MSG)));
+            send(botMessage((BOT_FETCH_ERROR_MSG)), true);
             return;
         });
 }
@@ -149,11 +154,11 @@ function getSpecificQuestion(questionId) {
         .then(res => res.json())
         .then(json => {
             session.setAnswer(json.results[0].correct_answer);
-            send(botMessage(json.results[0].question));
+            send(botMessage(json.results[0].question), true);
         })
         .catch(err => {
             console.log(err);
-            send(botMessage(BOT_FETCH_ERROR_MSG));
+            send(botMessage(BOT_FETCH_ERROR_MSG), true);
         });
 }
 
@@ -162,18 +167,18 @@ function handleUserInput(input) {
     if (!gameStatus.isGameStarted()) {
         if (isEqual(input, BOT_CMD_START)) {
             gameStatus.startGame();
-            send(botMessage(BOT_SELECT_MODE_MSG));
+            send(botMessage(BOT_SELECT_MODE_MSG)), true;
             return;
         }
         if (isEqual(input, BOT_CMD_HELP)) {
-            send(botMessage(BOT_HELP_MSG));
+            send(botMessage(BOT_HELP_MSG), true);
             return;
         }
         if (isEqual(input, BOT_CMD_EXIT) || isEqual(BOT_CMD_MODE_RANDOM) || isEqual(BOT_CMD_MODE_SPECIFIC)) {
-            send(botMessage(BOT_START_FIRST_MSG));
+            send(botMessage(BOT_START_FIRST_MSG), true);
             return;
         }
-        send(botMessage(BOT_HELP_MSG));
+        send(botMessage(BOT_HELP_MSG), true);
         return;
 
     }
@@ -185,8 +190,8 @@ function handleUserInput(input) {
             gameStatus.setGameMode(1);
             session.startQuestionSession();
 
-            send(botMessage(`Let's play random question session`));
-            send(botMessage(`Please answer with <span class="command">TRUE</span> or <span class="command">FALSE</span>`));
+            send(botMessage(`Let's play random question session`), true);
+            send(botMessage(`Please answer with <span class="command">TRUE</span> or <span class="command">FALSE</span>`), true);
             getRandomQuestion();
 
             return;
@@ -199,8 +204,8 @@ function handleUserInput(input) {
             let questionId = category.id;
             session.setQuestionId(questionId);
             let questionCategory = category.name;
-            send(botMessage(`Let's play specific question session about <span class="topic-name">${questionCategory}</span>`));
-            send(botMessage(`Please answer with <span class="command">TRUE</span> or <span class="command">FALSE</span>`));
+            send(botMessage(`Let's play specific question session about <span class="topic-name">${questionCategory}</span>`), true);
+            send(botMessage(`Please answer with <span class="command">TRUE</span> or <span class="command">FALSE</span>`), true);
             getSpecificQuestion(questionId);
             return;
         }
@@ -208,7 +213,7 @@ function handleUserInput(input) {
             stopCurrentSession();
             return;
         }
-        send(botMessage(BOT_SELECT_MODE_MSG));
+        send(botMessage(BOT_SELECT_MODE_MSG), true);
         return;
 
     }
@@ -221,11 +226,11 @@ function handleUserInput(input) {
                 return;
             }
             if (isEqual(input, BOT_CMD_HELP)) {
-                send(botMessage(BOT_HELP_MSG));
+                send(botMessage(BOT_HELP_MSG), true);
                 return;
             }
             if (isEqual(input, BOT_CMD_MODE_SPECIFIC)) {
-                send(botMessage(`Can't change session mode right now, Please exit first`));
+                send(botMessage(`Can't change session mode right now, Please exit first`), true);
                 return;
             }
             if (isEqual(input, BOT_CMD_START)) {
@@ -241,8 +246,8 @@ function handleUserInput(input) {
                 getRandomQuestion();
                 return;
             }
-            send(botMessage(`Wrong!`));
-            send(botMessage(`The answer was <span class="answer">${session.getAnswer()}</span> ! Better luck next time.`));
+            send(botMessage(`Wrong!`), true);
+            send(botMessage(`The answer was <span class="answer">${session.getAnswer()}</span> ! Better luck next time.`), true);
             getRandomQuestion();
             return;
         }
@@ -254,28 +259,28 @@ function handleUserInput(input) {
                 return;
             }
             if (isEqual(input, BOT_CMD_HELP)) {
-                send(botMessage(BOT_HELP_MSG));
+                send(botMessage(BOT_HELP_MSG), true);
                 return;
             }
             if (isEqual(input, BOT_CMD_MODE_RANDOM)) {
-                send(botMessage(`Can't change session mode right now, Please exit first`));
+                send(botMessage(`Can't change session mode right now, Please exit first`), true);
                 return;
             }
             if (isEqual(input, BOT_CMD_START)) {
-                send(botMessage(`Can't start another session right now, Please exit first`));
+                send(botMessage(`Can't start another session right now, Please exit first`), true);
                 return;
             }
             if (isEqual(input, BOT_CMD_MODE_SPECIFIC)) {
-                send(botMessage(`Already on specific question mode`));
+                send(botMessage(`Already on specific question mode`), true);
                 return;
             }
             if (isAnswerCorrect(input, session.getAnswer())) {
-                send(botMessage(`Bingo! you got the answer right. Ready for another challenge ?`));
+                send(botMessage(`Bingo! you got the answer right. Ready for another challenge ?`), true);
                 getSpecificQuestion(session.getQuestionId());
                 return;
             }
-            send(botMessage(`Wrong!`));
-            send(botMessage(`The answer was <span class="answer">${session.getAnswer()}</span> ! Better luck next time.`));
+            send(botMessage(`Wrong!`), true);
+            send(botMessage(`The answer was <span class="answer">${session.getAnswer()}</span> ! Better luck next time.`), true);
             getSpecificQuestion(session.getQuestionId());
             return;
         }
@@ -284,8 +289,39 @@ function handleUserInput(input) {
 
 }
 
+function executeChat() {
+    let message = chatBox.value;
+    if (message !== "") {
+        send(myMessage(message));
+        handleUserInput(message);
+        chatBox.value = '';
+    }
+}
 
 
+function animateProfile(idx) {
+    if (idx > 5) {
+        picture.src = `assets/avatar1.png`;
+        return;
+    }
+    picture.src = `assets/avatar${idx}.png`;
+    setTimeout(function () {
+        animateProfile(++idx);
+    }, 100);
+
+}
+
+function smile() {
+    setTimeout(function () {
+        picture.src = `assets/avatar${5}.png`;
+    }, 300);
+}
+
+function unsmile() {
+    setTimeout(function () {
+        picture.src = `assets/avatar${1}.png`;
+    }, 300);
+}
 let sticker = (function () {
     let stickerBtnClickable = false;
     return {
@@ -406,9 +442,9 @@ judul.addEventListener('animationend', function () {
     setTimeout(function () {
         let botGreetings = botMessage(BOT_GREETINGS_MSG);
         let botHelp = botMessage(BOT_HELP_MSG);
-        send(botGreetings);
+        send(botGreetings, true);
         setTimeout(function () {
-            send(botHelp);
+            send(botHelp, true);
             sticker.toggle();
         }, 500);
         chatBox.focus();
@@ -424,10 +460,14 @@ stickerButton.addEventListener('click', function () {
     }
 });
 chatButton.addEventListener('click', function () {
-    let message = chatBox.value;
-    if (message !== "") {
-        send(myMessage(message));
-        handleUserInput(message);
-        chatBox.value = '';
+    executeChat();
+});
+input.addEventListener('keypress', function (e) {
+    if (e.keyCode == 13) {
+        e.preventDefault();
+        executeChat();
     }
 });
+picture.addEventListener('mouseenter', smile);
+picture.addEventListener('mouseleave', unsmile);
+picture.addEventListener('click', smile);
